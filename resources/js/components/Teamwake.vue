@@ -43,6 +43,11 @@
       <div v-show="splitArray.length">
         余り：{{splitSurplus}}
       </div>
+    </div><div class="mb-4">
+      <button class="btn btn-primary" @click="showResult">結果発表</button>
+      <div v-show="Object.keys(resultArray).length > 0">
+        {{resultArray}}
+      </div>
     </div>
   </div>
 </template>
@@ -54,6 +59,7 @@ export default {
       membersInText: '',
       splitNumber: 2,
       splitArray: [],
+      resultArray: [],
     };
   },
   computed: {
@@ -88,21 +94,37 @@ export default {
   components: {
   },
   methods: {
-    remakeSplitArray(){
+    remakeSplitArray() {
       const array = [];
       if (this.members.length < this.splitNumber) {
       } else {
         const less = Math.floor(this.members.length / this.splitNumber);
         const surplus = this.members.length % this.splitNumber;
-        for(let $i = 0; $i < surplus; $i++) {
+        for(let i = 0; i < surplus; i++) {
           array.push(less + 1);
         }
-        for(let $i = 0; $i < this.splitNumber - surplus; $i++) {
+        for(let i = 0; i < this.splitNumber - surplus; i++) {
           array.push(less);
         }
       }
-      console.log('splitArray:',array);
       this.splitArray = array;
+    },
+    showResult() {
+      let members = this.members; //A,B,C,D
+      let result = {};
+      for(let i = members.length - 1; i > 0; i--){
+          let rand = Math.floor(Math.random() * (i + 1));
+          [members[i], members[rand]] = [members[rand], members[i]];
+      }
+      let membersIndex = 0;
+      for(let i = 0; i < this.splitArray.length; i++) {
+        result[`チーム${i+1}`] = [];
+        for(let j = 0; j < this.splitArray[i]; j++) {
+          result[`チーム${i+1}`].push(members[membersIndex]);
+          membersIndex++;
+        }
+      }
+      this.resultArray = result;
     }
   },
   watch: {

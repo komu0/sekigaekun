@@ -1980,12 +1980,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       membersInText: '',
       splitNumber: 2,
-      splitArray: []
+      splitArray: [],
+      resultArray: []
     };
   },
   computed: {
@@ -2030,17 +2036,41 @@ __webpack_require__.r(__webpack_exports__);
         var less = Math.floor(this.members.length / this.splitNumber);
         var surplus = this.members.length % this.splitNumber;
 
-        for (var $i = 0; $i < surplus; $i++) {
+        for (var i = 0; i < surplus; i++) {
           array.push(less + 1);
         }
 
-        for (var _$i = 0; _$i < this.splitNumber - surplus; _$i++) {
+        for (var _i = 0; _i < this.splitNumber - surplus; _i++) {
           array.push(less);
         }
       }
 
-      console.log('splitArray:', array);
       this.splitArray = array;
+    },
+    showResult: function showResult() {
+      var members = this.members; //A,B,C,D
+
+      var result = {};
+
+      for (var i = members.length - 1; i > 0; i--) {
+        var rand = Math.floor(Math.random() * (i + 1));
+        var _ref = [members[rand], members[i]];
+        members[i] = _ref[0];
+        members[rand] = _ref[1];
+      }
+
+      var membersIndex = 0;
+
+      for (var _i2 = 0; _i2 < this.splitArray.length; _i2++) {
+        result["\u30C1\u30FC\u30E0".concat(_i2 + 1)] = [];
+
+        for (var j = 0; j < this.splitArray[_i2]; j++) {
+          result["\u30C1\u30FC\u30E0".concat(_i2 + 1)].push(members[membersIndex]);
+          membersIndex++;
+        }
+      }
+
+      this.resultArray = result;
     }
   },
   watch: {
@@ -20001,7 +20031,29 @@ var render = function() {
         )
       ],
       2
-    )
+    ),
+    _c("div", { staticClass: "mb-4" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", on: { click: _vm.showResult } },
+        [_vm._v("結果発表")]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: Object.keys(_vm.resultArray).length > 0,
+              expression: "Object.keys(resultArray).length > 0"
+            }
+          ]
+        },
+        [_vm._v("\n      " + _vm._s(_vm.resultArray) + "\n    ")]
+      )
+    ])
   ])
 }
 var staticRenderFns = []
