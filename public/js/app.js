@@ -1944,6 +1944,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1966,6 +1971,15 @@ __webpack_require__.r(__webpack_exports__);
         return true;
       } else {
         return false;
+      }
+    },
+    membersIsUnique: function membersIsUnique() {
+      var s = new Set(this.members);
+
+      if (s.size != this.numberOfMembers) {
+        return false;
+      } else {
+        return true;
       }
     }
   },
@@ -19773,6 +19787,39 @@ var render = function() {
         [_vm._v("☑")]
       ),
       _vm._v("\n  3人以上入力しましょう。\n")
+    ]),
+    _vm._v(" "),
+    _c("div", [
+      _c(
+        "span",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.membersIsUnique,
+              expression: "!membersIsUnique"
+            }
+          ]
+        },
+        [_vm._v("☐")]
+      ),
+      _vm._v(" "),
+      _c(
+        "span",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.membersIsUnique,
+              expression: "membersIsUnique"
+            }
+          ]
+        },
+        [_vm._v("☑")]
+      ),
+      _vm._v("\n  同じ名前を書かないようにしましょう。\n")
     ]),
     _vm._v(" "),
     _c("textarea", {

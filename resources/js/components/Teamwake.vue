@@ -7,6 +7,11 @@
     <span v-show="membersIsMoreThan3">&#x2611;</span>
     3人以上入力しましょう。
   </div>
+  <div>
+    <span v-show="!membersIsUnique">&#x2610;</span>
+    <span v-show="membersIsUnique">&#x2611;</span>
+    同じ名前を書かないようにしましょう。
+  </div>
   <textarea v-model.trim="membersInText" rows=10></textarea>
   </div>
 </template>
@@ -35,6 +40,14 @@ export default {
         return false;
       }
     },
+    membersIsUnique() {
+      const s = new Set(this.members);
+      if (s.size != this.numberOfMembers){
+        return false;
+      }else{
+        return true;
+      }
+    }
   },
   components: {
   },
