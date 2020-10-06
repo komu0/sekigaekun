@@ -1,23 +1,18 @@
 <template>
   <div>
     <div class="mb-4">
-      <h2>メンバーを改行区切りで記入してください。</h2>
-      <div>入力済：{{members.length}}人</div>
-      <div>
-        <span v-show="!membersIsMoreThan3">&#x2610;</span>
-        <span v-show="membersIsMoreThan3">&#x2611;</span>
-        3人以上入力しましょう。
-      </div>
-      <div>
-        <span v-show="!membersIsUnique">&#x2610;</span>
-        <span v-show="membersIsUnique">&#x2611;</span>
-        同じ名前を書かないようにしましょう。
-      </div>
+      <h2>メンバーを記入してください。<br>(改行区切り)</h2>
       <textarea v-model.trim="membersInText" rows=10></textarea>
+      <div class="text-right mb-2">入力済：{{members.length}}人</div>
+      <div>
+        <span v-show="duplicateUser">
+          <i class="fa fa-exclamation-triangle"></i>名前「{{duplicateUser}}」が重複しています。
+        </span>
+      </div>
     </div>
     <div class="mb-4">
       <h2>何チームに分けますか。</h2>
-      <div class="row mr-1 ml-1 mb-4">
+      <div class="row mr-1 ml-1">
         <button
           type="button"
           class="btn col-2 d-inline"
@@ -28,8 +23,8 @@
         </button>
       </div>
     </div>
-    <div class="mb-4">
-      <h2>何人ずつに分けますか。</h2>
+    <div id="split-adjust" class="mb-4">
+      <h2 class="mb-0">何人ずつに分けますか。</h2>
       <div v-for="(number, index) in splitArray">
         チーム{{index + 1}}：
         <a href="#" @click.prevent="splitArray[index]--; splitArray.splice();">
@@ -43,7 +38,8 @@
       <div v-show="splitArray.length">
         余り：{{splitSurplus}}
       </div>
-    </div><div class="mb-4">
+    </div>
+    <div class="mb-4">
       <button class="btn btn-primary" @click="showResult">結果発表</button>
       <div v-show="Object.keys(resultArray).length > 0">
         {{resultArray}}
@@ -79,13 +75,24 @@ export default {
         return false;
       }
     },
-    membersIsUnique() {
-      const s = new Set(this.members);
-      if (s.size != this.members.length){
-        return false;
-      }else{
-        return true;
+    duplicateUser() {
+      // これだと何が重複しているかわからないので却下。
+      // const s = new Set(this.members);
+      // if (s.size != this.members.length){
+      //   return true;
+      // }else{
+      //   return false;
+      // }
+      
+      for(let i = 0; i < this.members.length; i++){
+        const user = this.members[i];
+        for (let j = i + 1; j < this.members.length; j++){
+          if (user === this.members[j]) {
+            return user;
+          }
+        }
       }
+      return '';
     },
     splitSurplus() {
       return this.members.length - this.splitArray.reduce((a,x) => a+=x,0);
