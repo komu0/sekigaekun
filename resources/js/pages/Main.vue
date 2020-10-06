@@ -40,7 +40,7 @@ import Teamwake from '../components/Teamwake.vue';
 export default {
   data () {
     return {
-      modeOfFunction: '',
+      modeOfFunction: 'sekigae',
     };
   },
   components: {
