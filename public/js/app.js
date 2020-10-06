@@ -19573,7 +19573,9 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("h1", [_vm._v("Main")])
+  return _c("h1", { staticClass: "m-4", attrs: { id: "title" } }, [
+    _vm._v("席替えくん / チーム決めくん")
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -35014,7 +35016,7 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]); // パスとコンポーネントのマッピング
 
 var routes = [{
-  path: '/',
+  path: '*',
   component: _pages_Main_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
 }]; // VueRouterインスタンスを作成する
 
@@ -35028,14 +35030,26 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 
 /***/ }),
 
+/***/ "./resources/sass/app.scss":
+/*!*********************************!*\
+  !*** ./resources/sass/app.scss ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ 0:
-/*!***********************************!*\
-  !*** multi ./resources/js/app.js ***!
-  \***********************************/
+/*!*************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/app.scss ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/ubuntu/environment/sekigaekun/resources/js/app.js */"./resources/js/app.js");
+__webpack_require__(/*! /home/ubuntu/environment/sekigaekun/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/ubuntu/environment/sekigaekun/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

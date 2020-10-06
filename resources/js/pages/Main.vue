@@ -1,3 +1,3 @@
 <template>
-  <h1>Main</h1>
+  <h1 id="title" class="m-4">席替えくん / チーム決めくん</h1>
 </template>
