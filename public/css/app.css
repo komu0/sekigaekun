@@ -6,3 +6,7 @@ h2 {
   font-size: 17px;
 }
 
+textarea {
+  width: 100%;
+}
+

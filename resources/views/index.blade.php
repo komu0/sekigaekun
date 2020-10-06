@@ -8,6 +8,9 @@
   <!-- Styles -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
   
+  <!-- Font Awesome -->
+  <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+  
   <!-- Scripts -->
   <script src="{{ mix('js/app.js') }}" defer></script>
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">

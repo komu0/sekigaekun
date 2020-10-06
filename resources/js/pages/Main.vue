@@ -7,7 +7,7 @@
     <h2>
       何を行いますか？
     </h2>
-    <div class="row mr-1 ml-1">
+    <div class="row mr-1 ml-1 mb-4">
       <button
         type="button"
         class="btn col-6 d-inline"
