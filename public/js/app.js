@@ -1964,17 +1964,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       membersInText: '',
-      splitNumber: 2
+      splitNumber: 2,
+      splitArray: []
     };
   },
   computed: {
-    numberOfMembers: function numberOfMembers() {
-      return this.members.length;
-    },
     members: function members() {
       if (this.membersInText === '') {
         return [];
@@ -1982,8 +1996,11 @@ __webpack_require__.r(__webpack_exports__);
 
       return this.membersInText.split(/\n+/);
     },
+    membersLength: function membersLength() {
+      return this.members.length;
+    },
     membersIsMoreThan3: function membersIsMoreThan3() {
-      if (this.numberOfMembers >= 3) {
+      if (this.members.length >= 3) {
         return true;
       } else {
         return false;
@@ -1992,15 +2009,48 @@ __webpack_require__.r(__webpack_exports__);
     membersIsUnique: function membersIsUnique() {
       var s = new Set(this.members);
 
-      if (s.size != this.numberOfMembers) {
+      if (s.size != this.members.length) {
         return false;
       } else {
         return true;
       }
+    },
+    splitSurplus: function splitSurplus() {
+      return this.members.length - this.splitArray.reduce(function (a, x) {
+        return a += x;
+      }, 0);
     }
   },
   components: {},
-  methods: {}
+  methods: {
+    remakeSplitArray: function remakeSplitArray() {
+      var array = [];
+
+      if (this.members.length < this.splitNumber) {} else {
+        var less = Math.floor(this.members.length / this.splitNumber);
+        var surplus = this.members.length % this.splitNumber;
+
+        for (var $i = 0; $i < surplus; $i++) {
+          array.push(less + 1);
+        }
+
+        for (var _$i = 0; _$i < this.splitNumber - surplus; _$i++) {
+          array.push(less);
+        }
+      }
+
+      console.log('splitArray:', array);
+      this.splitArray = array;
+    }
+  },
+  watch: {
+    membersLength: function membersLength() {
+      this.remakeSplitArray();
+    },
+    splitNumber: function splitNumber() {
+      this.remakeSplitArray();
+    }
+  }
 });
 
 /***/ }),
@@ -19771,7 +19821,7 @@ var render = function() {
     _c("div", { staticClass: "mb-4" }, [
       _c("h2", [_vm._v("メンバーを改行区切りで記入してください。")]),
       _vm._v(" "),
-      _c("div", [_vm._v("入力済：" + _vm._s(_vm.numberOfMembers) + "人")]),
+      _c("div", [_vm._v("入力済：" + _vm._s(_vm.members.length) + "人")]),
       _vm._v(" "),
       _c("div", [
         _c(
@@ -19866,7 +19916,7 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "mb-4" }, [
-      _c("h2", [_vm._v("いくつに分けますか。")]),
+      _c("h2", [_vm._v("何チームに分けますか。")]),
       _vm._v(" "),
       _c(
         "div",
@@ -19892,7 +19942,66 @@ var render = function() {
         }),
         0
       )
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "mb-4" },
+      [
+        _c("h2", [_vm._v("何人ずつに分けますか。")]),
+        _vm._v(" "),
+        _vm._l(_vm.splitArray, function(number, index) {
+          return _c("div", [
+            _vm._v("\n      チーム" + _vm._s(index + 1) + "：\n      "),
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    _vm.splitArray[index]--
+                    _vm.splitArray.splice()
+                  }
+                }
+              },
+              [_c("i", { staticClass: "fa fa-minus-square-o" })]
+            ),
+            _vm._v("\n        " + _vm._s(_vm.splitArray[index]) + "\n      "),
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    _vm.splitArray[index]++
+                    _vm.splitArray.splice()
+                  }
+                }
+              },
+              [_c("i", { staticClass: "fa fa-plus-square-o" })]
+            )
+          ])
+        }),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.splitArray.length,
+                expression: "splitArray.length"
+              }
+            ]
+          },
+          [_vm._v("\n      余り：" + _vm._s(_vm.splitSurplus) + "\n    ")]
+        )
+      ],
+      2
+    )
   ])
 }
 var staticRenderFns = []
