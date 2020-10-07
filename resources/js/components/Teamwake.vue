@@ -58,13 +58,16 @@
           {{key}}→
           <span v-for="(member, j) in result"><span v-show="j !== 0">、</span>{{member}}</span>
         </div>
-        <a
-          href="#"
-          class="text-right"
-          v-clipboard:copy="resultForCopy"
-        >
-          <i class="fa fa-clone"></i>結果をコピー
-        </a>
+        <div class="text-right">
+          <a
+            href="javascript:void(0)"
+            v-clipboard:copy="resultForCopy"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError"
+          >
+            <i class="fa fa-clone"></i>結果をコピー
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -166,7 +169,13 @@ export default {
         }
       }
       this.resultObject = result;
-    }
+    },
+    onCopy() {
+      alert('結果をコピーしました！');
+    },
+    onError() {
+      alert('結果のコピーに失敗しました……。');
+    },
   },
   watch: {
     membersLength: function() {

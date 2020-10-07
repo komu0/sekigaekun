@@ -2003,6 +2003,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 var colors = ['#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF', '#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF', '#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF'];
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2115,6 +2118,12 @@ var colors = ['#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', 
       }
 
       this.resultObject = result;
+    },
+    onCopy: function onCopy() {
+      alert('結果をコピーしました！');
+    },
+    onError: function onError() {
+      alert('結果のコピーに失敗しました……。');
     }
   },
   watch: {
@@ -20255,26 +20264,41 @@ var render = function() {
             )
           }),
           _vm._v(" "),
-          _c(
-            "a",
-            {
-              directives: [
-                {
-                  name: "clipboard",
-                  rawName: "v-clipboard:copy",
-                  value: _vm.resultForCopy,
-                  expression: "resultForCopy",
-                  arg: "copy"
-                }
-              ],
-              staticClass: "text-right",
-              attrs: { href: "#" }
-            },
-            [
-              _c("i", { staticClass: "fa fa-clone" }),
-              _vm._v("結果をコピー\n      ")
-            ]
-          )
+          _c("div", { staticClass: "text-right" }, [
+            _c(
+              "a",
+              {
+                directives: [
+                  {
+                    name: "clipboard",
+                    rawName: "v-clipboard:copy",
+                    value: _vm.resultForCopy,
+                    expression: "resultForCopy",
+                    arg: "copy"
+                  },
+                  {
+                    name: "clipboard",
+                    rawName: "v-clipboard:success",
+                    value: _vm.onCopy,
+                    expression: "onCopy",
+                    arg: "success"
+                  },
+                  {
+                    name: "clipboard",
+                    rawName: "v-clipboard:error",
+                    value: _vm.onError,
+                    expression: "onError",
+                    arg: "error"
+                  }
+                ],
+                attrs: { href: "javascript:void(0)" }
+              },
+              [
+                _c("i", { staticClass: "fa fa-clone" }),
+                _vm._v("結果をコピー\n        ")
+              ]
+            )
+          ])
         ],
         2
       )
