@@ -2006,6 +2006,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 var colors = ['#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF', '#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF', '#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF'];
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2014,6 +2017,7 @@ var colors = ['#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', 
       splitNumber: 2,
       splitArray: [],
       resultObject: {},
+      copyResult: "",
       colors: colors
     };
   },
@@ -2120,10 +2124,23 @@ var colors = ['#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', 
       this.resultObject = result;
     },
     onCopy: function onCopy() {
-      alert('結果をコピーしました！');
+      var now = new Date();
+      var H = ('0' + now.getHours()).slice(-2);
+      var M = ('0' + now.getMinutes()).slice(-2);
+      var S = ('0' + now.getSeconds()).slice(-2);
+      var displayNow = "".concat(H, "\u6642").concat(M, "\u5206").concat(S, "\u79D2");
+      var result = "\u7D50\u679C\u3092\u30B3\u30D4\u30FC\u3057\u307E\u3057\u305F\uFF01\n        (".concat(displayNow, ")");
+      this.copyResult = result;
+      console.log(result);
     },
     onError: function onError() {
-      alert('結果のコピーに失敗しました……。');
+      var now = new Date();
+      var H = ('0' + now.getHours()).slice(-2);
+      var M = ('0' + now.getMinutes()).slice(-2);
+      var S = ('0' + now.getSeconds()).slice(-2);
+      var displayNow = "".concat(H, "\u6642").concat(M, "\u5206").concat(S, "\u79D2");
+      var result = "\u7D50\u679C\u306E\u30B3\u30D4\u30FC\u306B\u5931\u6557\u3057\u307E\u3057\u305F\u2026\u2026\u3002\n        (".concat(displayNow, ")");
+      this.copyResult = result;
     }
   },
   watch: {
@@ -20297,7 +20314,11 @@ var render = function() {
                 _c("i", { staticClass: "fa fa-clone" }),
                 _vm._v("結果をコピー\n        ")
               ]
-            )
+            ),
+            _vm._v(" "),
+            _c("span", { staticStyle: { "white-space": "pre" } }, [
+              _vm._v("\n          " + _vm._s(_vm.copyResult) + "\n        ")
+            ])
           ])
         ],
         2

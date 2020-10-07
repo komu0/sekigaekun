@@ -67,6 +67,9 @@
           >
             <i class="fa fa-clone"></i>結果をコピー
           </a>
+          <span style="white-space: pre;">
+            {{copyResult}}
+          </span>
         </div>
       </div>
     </div>
@@ -86,6 +89,7 @@ export default {
       splitNumber: 2,
       splitArray: [],
       resultObject: {},
+      copyResult: "",
       colors,
     };
   },
@@ -171,10 +175,27 @@ export default {
       this.resultObject = result;
     },
     onCopy() {
-      alert('結果をコピーしました！');
+      const now =new Date();
+      const H =('0' + now.getHours()).slice(-2);
+      const M =('0' + now.getMinutes()).slice(-2);
+      const S =('0' + now.getSeconds()).slice(-2);
+      const displayNow = `${H}時${M}分${S}秒`;
+      const result =
+        `結果をコピーしました！
+        (${displayNow})`;
+      this.copyResult = result;
+      console.log(result);
     },
     onError() {
-      alert('結果のコピーに失敗しました……。');
+      const now =new Date();
+      const H =('0' + now.getHours()).slice(-2);
+      const M =('0' + now.getMinutes()).slice(-2);
+      const S =('0' + now.getSeconds()).slice(-2);
+      const displayNow = `${H}時${M}分${S}秒`;
+      const result =
+        `結果のコピーに失敗しました……。
+        (${displayNow})`;
+      this.copyResult = result;
     },
   },
   watch: {
