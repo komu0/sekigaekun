@@ -14,3 +14,7 @@ textarea {
   font-size: 30px;
 }
 
+.container {
+  max-width: 960px;
+}
+

@@ -53,27 +53,29 @@
     </div>
     <div class="mb-4">
       <button class="btn btn-primary mb-2 col-6" @click="showResult">結果表示</button>
-      <div v-show="Object.keys(resultObject).length > 0">
-        <div class="container">
-          <div class="row">
-            <div class="col-6 p-0" v-for="(result, key, i) in resultObject" :style="{'background-color': bgColors[i]}">
-              <span style="font-size: 20px">{{key}}<br></span>
-              <span v-for="(member, j) in result"><span v-show="j !== 0"><br></span>{{member}}</span>
+      <div  style="min-height: 400px;">
+        <div v-show="Object.keys(resultObject).length > 0">
+          <div class="container">
+            <div class="row">
+              <div class="col-6 p-0" v-for="(result, key, i) in resultObject" :style="{'background-color': bgColors[i]}">
+                <span style="font-size: 20px">{{key}}<br></span>
+                <span v-for="(member, j) in result"><span v-show="j !== 0"><br></span>{{member}}</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="text-right">
-          <a
-            href="javascript:void(0)"
-            v-clipboard:copy="resultForCopy"
-            v-clipboard:success="onCopy"
-            v-clipboard:error="onError"
-          >
-            <i class="fa fa-clone"></i>結果をコピー
-          </a>
-          <span style="white-space: pre;">
-            {{copyResult}}
-          </span>
+          <div class="text-right">
+            <a
+              href="javascript:void(0)"
+              v-clipboard:copy="resultForCopy"
+              v-clipboard:success="onCopy"
+              v-clipboard:error="onError"
+            >
+              <i class="fa fa-clone"></i>結果をコピー
+            </a>
+            <span style="white-space: pre;">
+              {{copyResult}}
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -2013,6 +2013,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 var colors = ['#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF', '#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF', '#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF'];
 var bgColors = ['#FF6684', '#669BFF', '#FFFF32', '#65FF32', '#FFCC99', '#CC32FF', '#FF99E5', '#99E5FF', '#FF6684', '#669BFF', '#FFFF32', '#65FF32', '#FFCC99', '#CC32FF', '#FF99E5', '#99E5FF', '#FF6684', '#669BFF', '#FFFF32', '#65FF32', '#FFCC99', '#CC32FF', '#FF99E5', '#99E5FF'];
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -20244,104 +20246,108 @@ var render = function() {
         [_vm._v("結果表示")]
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: Object.keys(_vm.resultObject).length > 0,
-              expression: "Object.keys(resultObject).length > 0"
-            }
-          ]
-        },
-        [
-          _c("div", { staticClass: "container" }, [
-            _c(
-              "div",
-              { staticClass: "row" },
-              _vm._l(_vm.resultObject, function(result, key, i) {
-                return _c(
-                  "div",
-                  {
-                    staticClass: "col-6 p-0",
-                    style: { "background-color": _vm.bgColors[i] }
-                  },
-                  [
-                    _c("span", { staticStyle: { "font-size": "20px" } }, [
-                      _vm._v(_vm._s(key)),
-                      _c("br")
-                    ]),
-                    _vm._v(" "),
-                    _vm._l(result, function(member, j) {
-                      return _c("span", [
-                        _c(
-                          "span",
-                          {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: j !== 0,
-                                expression: "j !== 0"
-                              }
-                            ]
-                          },
-                          [_c("br")]
-                        ),
-                        _vm._v(_vm._s(member))
-                      ])
-                    })
-                  ],
-                  2
-                )
-              }),
-              0
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "text-right" }, [
-            _c(
-              "a",
+      _c("div", { staticStyle: { "min-height": "400px" } }, [
+        _c(
+          "div",
+          {
+            directives: [
               {
-                directives: [
-                  {
-                    name: "clipboard",
-                    rawName: "v-clipboard:copy",
-                    value: _vm.resultForCopy,
-                    expression: "resultForCopy",
-                    arg: "copy"
-                  },
-                  {
-                    name: "clipboard",
-                    rawName: "v-clipboard:success",
-                    value: _vm.onCopy,
-                    expression: "onCopy",
-                    arg: "success"
-                  },
-                  {
-                    name: "clipboard",
-                    rawName: "v-clipboard:error",
-                    value: _vm.onError,
-                    expression: "onError",
-                    arg: "error"
-                  }
-                ],
-                attrs: { href: "javascript:void(0)" }
-              },
-              [
-                _c("i", { staticClass: "fa fa-clone" }),
-                _vm._v("結果をコピー\n        ")
-              ]
-            ),
+                name: "show",
+                rawName: "v-show",
+                value: Object.keys(_vm.resultObject).length > 0,
+                expression: "Object.keys(resultObject).length > 0"
+              }
+            ]
+          },
+          [
+            _c("div", { staticClass: "container" }, [
+              _c(
+                "div",
+                { staticClass: "row" },
+                _vm._l(_vm.resultObject, function(result, key, i) {
+                  return _c(
+                    "div",
+                    {
+                      staticClass: "col-6 p-0",
+                      style: { "background-color": _vm.bgColors[i] }
+                    },
+                    [
+                      _c("span", { staticStyle: { "font-size": "20px" } }, [
+                        _vm._v(_vm._s(key)),
+                        _c("br")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(result, function(member, j) {
+                        return _c("span", [
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: j !== 0,
+                                  expression: "j !== 0"
+                                }
+                              ]
+                            },
+                            [_c("br")]
+                          ),
+                          _vm._v(_vm._s(member))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                }),
+                0
+              )
+            ]),
             _vm._v(" "),
-            _c("span", { staticStyle: { "white-space": "pre" } }, [
-              _vm._v("\n          " + _vm._s(_vm.copyResult) + "\n        ")
+            _c("div", { staticClass: "text-right" }, [
+              _c(
+                "a",
+                {
+                  directives: [
+                    {
+                      name: "clipboard",
+                      rawName: "v-clipboard:copy",
+                      value: _vm.resultForCopy,
+                      expression: "resultForCopy",
+                      arg: "copy"
+                    },
+                    {
+                      name: "clipboard",
+                      rawName: "v-clipboard:success",
+                      value: _vm.onCopy,
+                      expression: "onCopy",
+                      arg: "success"
+                    },
+                    {
+                      name: "clipboard",
+                      rawName: "v-clipboard:error",
+                      value: _vm.onError,
+                      expression: "onError",
+                      arg: "error"
+                    }
+                  ],
+                  attrs: { href: "javascript:void(0)" }
+                },
+                [
+                  _c("i", { staticClass: "fa fa-clone" }),
+                  _vm._v("結果をコピー\n          ")
+                ]
+              ),
+              _vm._v(" "),
+              _c("span", { staticStyle: { "white-space": "pre" } }, [
+                _vm._v(
+                  "\n            " + _vm._s(_vm.copyResult) + "\n          "
+                )
+              ])
             ])
-          ])
-        ]
-      )
+          ]
+        )
+      ])
     ])
   ])
 }
