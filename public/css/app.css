@@ -1,1 +1,28 @@
-html{touch-action:manipulation}body{overflow-y:scroll}h1{font-size:35px}h2{font-size:18px}textarea{width:100%}#split-adjust{font-size:30px}.container{max-width:960px}
+html {
+  touch-action: manipulation;
+}
+
+body {
+  overflow-y: scroll;
+}
+
+h1 {
+  font-size: 35px;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+textarea {
+  width: 100%;
+}
+
+#split-adjust {
+  font-size: 30px;
+}
+
+.container {
+  max-width: 720px;
+}
+
