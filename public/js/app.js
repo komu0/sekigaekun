@@ -1930,10 +1930,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      membersInText: ''
+      membersInText: '',
+      resultObject: ''
     };
   },
   computed: {
@@ -1962,7 +1980,32 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   components: {},
-  methods: {}
+  methods: {
+    showResult: function showResult() {
+      var members = this.members; //A,B,C,D
+
+      var result = {};
+      result['left'] = [];
+      result['right'] = [];
+
+      for (var i = members.length - 1; i > 0; i--) {
+        var rand = Math.floor(Math.random() * (i + 1));
+        var _ref = [members[rand], members[i]];
+        members[i] = _ref[0];
+        members[rand] = _ref[1];
+      }
+
+      members.forEach(function (member, i) {
+        if (i % 2 === 0) {
+          result['left'].push(member);
+        } else {
+          result['right'].push(member);
+        }
+      });
+      this.resultObject = result;
+      console.log(result);
+    }
+  }
 });
 
 /***/ }),
@@ -20110,7 +20153,76 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _vm._m(1)
+    _c("div", { staticClass: "mb-4" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary mb-4 col-6",
+          on: { click: _vm.showResult }
+        },
+        [_vm._v("結果表示")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticStyle: { "min-height": "400px" } }, [
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: Object.keys(_vm.resultObject).length > 0,
+                expression: "Object.keys(resultObject).length > 0"
+              }
+            ]
+          },
+          [
+            _c("div", { staticClass: "container" }, [
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  { staticClass: "col-5" },
+                  _vm._l(_vm.resultObject.left, function(member) {
+                    return _c("div", [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(member) +
+                          "\n              "
+                      )
+                    ])
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "col-2",
+                    staticStyle: { "background-color": "#98514B" }
+                  },
+                  [_vm._v("\n              机\n            ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col-5" },
+                  _vm._l(_vm.resultObject.right, function(member) {
+                    return _c("div", [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(member) +
+                          "\n              "
+                      )
+                    ])
+                  }),
+                  0
+                )
+              ])
+            ])
+          ]
+        )
+      ])
+    ])
   ])
 }
 var staticRenderFns = [
@@ -20122,16 +20234,6 @@ var staticRenderFns = [
       _vm._v("メンバーを記入してください。"),
       _c("br"),
       _vm._v("※改行区切り")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mb-4" }, [
-      _c("div", { staticClass: "container" }, [
-        _c("div", { staticClass: "row" })
-      ])
     ])
   }
 ]
