@@ -11,21 +11,29 @@
       </div>
     </div>
     <div class="mb-4">
-      <button class="btn btn-primary mb-4 col-6" @click="showResult">結果表示</button>
+      <button class="btn btn-primary mb-3 col-6" @click="showResult">結果表示</button>
       <div  style="min-height: 400px;">
         <div v-show="Object.keys(resultObject).length > 0">
           <div class="container">
             <div class="row">
-              <div class="col-5">
-                <div v-for="member in resultObject.left">
+              <div class="col-5 p-0">
+                <div
+                  v-for="(member, i) in resultObject.left"
+                  :style="{'background-color': bgColors[i % 2]}"
+                  class="pt-2 pb-2"
+                >
                   {{member}}
                 </div>
               </div>
-              <div class="col-2" style="background-color: #98514B;">
-                机
+              <div class="col-2 d-flex align-items-center" style="background-color: #cd5c5c;">
+                <div class="m-auto">机</div>
               </div>
-              <div class="col-5">
-                <div v-for="member in resultObject.right">
+              <div class="col-5 p-0">
+                <div
+                  v-for="(member, i) in resultObject.right"
+                  :style="{'background-color': bgColors[i % 2]}"
+                  class="pt-2 pb-2"
+                >
                   {{member}}
                 </div>
               </div>
@@ -38,11 +46,13 @@
 </template>
 
 <script>
+const bgColors = ['#dcdcdc', '#c0c0c0'];
 export default {
   data () {
     return {
       membersInText: '',
       resultObject: '',
+      bgColors,
     };
   },
   computed: {

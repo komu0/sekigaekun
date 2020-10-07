@@ -52,7 +52,7 @@
       <i class="fa fa-exclamation-triangle"></i>チーム数を減らすかメンバーを増やしてください。
     </div>
     <div class="mb-4">
-      <button class="btn btn-primary mb-2 col-6" @click="showResult">結果表示</button>
+      <button class="btn btn-primary mb-3 col-6" @click="showResult">結果表示</button>
       <div  style="min-height: 400px;">
         <div v-show="Object.keys(resultObject).length > 0">
           <div class="container">
