@@ -2130,6 +2130,7 @@ var bgColors = ['#FF6684', '#669BFF', '#FFFF32', '#65FF32', '#FFCC99', '#CC32FF'
       }
 
       this.resultObject = result;
+      this.copyResult = '';
     },
     onCopy: function onCopy() {
       var now = new Date();

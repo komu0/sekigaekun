@@ -185,6 +185,7 @@ export default {
         }
       }
       this.resultObject = result;
+      this.copyResult = '';
     },
     onCopy() {
       const now =new Date();
