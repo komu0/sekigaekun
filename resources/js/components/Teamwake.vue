@@ -54,9 +54,13 @@
     <div class="mb-4">
       <button class="btn btn-primary mb-2 col-6" @click="showResult">結果表示</button>
       <div v-show="Object.keys(resultObject).length > 0">
-        <div v-for="(result, key, i) in resultObject" :style="{color: colors[i]}">
-          {{key}}→
-          <span v-for="(member, j) in result"><span v-show="j !== 0">、</span>{{member}}</span>
+        <div class="container">
+          <div class="row">
+            <div class="col-6 p-0" v-for="(result, key, i) in resultObject" :style="{'background-color': bgColors[i]}">
+              <span style="font-size: 20px">{{key}}<br></span>
+              <span v-for="(member, j) in result"><span v-show="j !== 0"><br></span>{{member}}</span>
+            </div>
+          </div>
         </div>
         <div class="text-right">
           <a
@@ -82,6 +86,11 @@ const colors = [
   '#FF0033','#3300FF','#CCCC00','#33CC00','#FF9933', '#9900CC', '#FF33CC', '#33CCFF',
   '#FF0033','#3300FF','#CCCC00','#33CC00','#FF9933', '#9900CC', '#FF33CC', '#33CCFF',
 ];
+const bgColors = [
+  '#FF6684','#669BFF','#FFFF32','#65FF32','#FFCC99', '#CC32FF', '#FF99E5', '#99E5FF',
+  '#FF6684','#669BFF','#FFFF32','#65FF32','#FFCC99', '#CC32FF', '#FF99E5', '#99E5FF',
+  '#FF6684','#669BFF','#FFFF32','#65FF32','#FFCC99', '#CC32FF', '#FF99E5', '#99E5FF',
+];
 export default {
   data () {
     return {
@@ -91,6 +100,7 @@ export default {
       resultObject: {},
       copyResult: "",
       colors,
+      bgColors,
     };
   },
   computed: {
