@@ -53,11 +53,18 @@
     </div>
     <div class="mb-4">
       <button class="btn btn-primary mb-2 col-6" @click="showResult">結果表示</button>
-      <div v-show="Object.keys(resultArray).length > 0">
-        <div v-for="(result, key, i) in resultArray" :style="{color: colors[i]}">
+      <div v-show="Object.keys(resultObject).length > 0">
+        <div v-for="(result, key, i) in resultObject" :style="{color: colors[i]}">
           {{key}}→
           <span v-for="(member, j) in result"><span v-show="j !== 0">、</span>{{member}}</span>
         </div>
+        <a
+          href="#"
+          class="text-right"
+          v-clipboard:copy="resultForCopy"
+        >
+          <i class="fa fa-clone"></i>結果をコピー
+        </a>
       </div>
     </div>
   </div>
@@ -75,7 +82,7 @@ export default {
       membersInText: '',
       splitNumber: 2,
       splitArray: [],
-      resultArray: [],
+      resultObject: {},
       colors,
     };
   },
@@ -110,9 +117,23 @@ export default {
     },
     splitSurplus() {
       return this.members.length - this.splitArray.reduce((a,x) => a+=x,0);
+    },
+    resultForCopy() {
+      let result = '';
+      Object.keys(this.resultObject).forEach((key,i ) => {
+        if(i != 0){
+          result += '\n';
+        }
+        result += `${key}→`;
+        this.resultObject[key].forEach((member, j) => {
+          if(j !== 0){
+            result += '、';
+          }
+          result += member;
+        });
+      });
+      return result;
     }
-  },
-  components: {
   },
   methods: {
     remakeSplitArray() {
@@ -144,7 +165,7 @@ export default {
           membersIndex++;
         }
       }
-      this.resultArray = result;
+      this.resultObject = result;
     }
   },
   watch: {

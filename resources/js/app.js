@@ -4,7 +4,10 @@ import router from './router'
 // ルートコンポーネントをインポートする
 import App from './App.vue'
 
-import Vue from 'vue'
+import Vue from 'vue';
+import VueClipboard from 'vue-clipboard2';
+
+Vue.use(VueClipboard);
 
 new Vue({
   el: '#app',
