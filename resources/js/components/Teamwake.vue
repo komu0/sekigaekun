@@ -23,34 +23,40 @@
         </button>
       </div>
     </div>
-    <div v-show="splitArray.length" id="split-adjust" class="mb-4">
+    <div v-show="splitArray.length" class="mb-4">
       <h2 class="mb-0">何人ずつに分けますか。</h2>
-      <div v-for="(number, index) in splitArray">
-        <span :style="{color: colors[index]}">チーム{{index + 1}}</span>：
-        <a href="#" @click.prevent="splitArray[index]--; splitArray.splice();">
-          <i class="fa fa-minus-square-o"></i>
-        </a>
-          {{number}}
-        <a href="#" @click.prevent="splitArray[index]++; splitArray.splice();">
-          <i class="fa fa-plus-square-o"></i>
-        </a>
+      <div id="split-adjust">
+        <div v-for="(number, index) in splitArray">
+          <span :style="{color: colors[index]}">チーム{{index + 1}}</span>：
+          <span v-if="number===0">
+            <i class="fa fa-minus-square-o"></i>
+          </span>
+          <a
+            v-else
+            href="#"
+            @click.prevent="splitArray[index]--; splitArray.splice();"
+          >
+            <i class="fa fa-minus-square-o"></i>
+          </a>
+            {{number}}
+          <a href="#" @click.prevent="splitArray[index]++; splitArray.splice();">
+            <i class="fa fa-plus-square-o"></i>
+          </a>
+        </div>
       </div>
-      <div v-show="splitArray.length">
-        余り：{{splitSurplus}}
+      <div v-show="splitArray.length" class="text-right">
+        <i v-show="splitSurplus !== 0" class="fa fa-exclamation-triangle"></i>余り：{{splitSurplus}}
       </div>
     </div>
     <div v-show="!splitArray.length" class="mb-4">
       <i class="fa fa-exclamation-triangle"></i>チーム数を減らすかメンバーを増やしてください。
     </div>
     <div class="mb-4">
-      <button class="btn btn-primary mb-2" @click="showResult">結果発表</button>
+      <button class="btn btn-primary mb-2 col-6" @click="showResult">結果表示</button>
       <div v-show="Object.keys(resultArray).length > 0">
         <div v-for="(result, key, i) in resultArray" :style="{color: colors[i]}">
           {{key}}→
-          <span v-for="(member, j) in result">
-            <span v-show="j !== 0">、</span>
-            {{member}}
-          </span>
+          <span v-for="(member, j) in result"><span v-show="j !== 0">、</span>{{member}}</span>
         </div>
       </div>
     </div>
@@ -82,13 +88,6 @@ export default {
     },
     membersLength() {
       return this.members.length;
-    },
-    membersIsMoreThan3() {
-      if (this.members.length >= 3){
-        return true;
-      } else {
-        return false;
-      }
     },
     duplicateUser() {
       // これだと何が重複しているかわからないので却下。

@@ -1990,6 +1990,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 var colors = ['#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF', '#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF', '#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF'];
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2011,13 +2017,6 @@ var colors = ['#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', 
     },
     membersLength: function membersLength() {
       return this.members.length;
-    },
-    membersIsMoreThan3: function membersIsMoreThan3() {
-      if (this.members.length >= 3) {
-        return true;
-      } else {
-        return false;
-      }
     },
     duplicateUser: function duplicateUser() {
       // これだと何が重複しているかわからないので却下。
@@ -19965,49 +19964,55 @@ var render = function() {
             expression: "splitArray.length"
           }
         ],
-        staticClass: "mb-4",
-        attrs: { id: "split-adjust" }
+        staticClass: "mb-4"
       },
       [
         _c("h2", { staticClass: "mb-0" }, [_vm._v("何人ずつに分けますか。")]),
         _vm._v(" "),
-        _vm._l(_vm.splitArray, function(number, index) {
-          return _c("div", [
-            _c("span", { style: { color: _vm.colors[index] } }, [
-              _vm._v("チーム" + _vm._s(index + 1))
-            ]),
-            _vm._v("：\n      "),
-            _c(
-              "a",
-              {
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    _vm.splitArray[index]--
-                    _vm.splitArray.splice()
+        _c(
+          "div",
+          { attrs: { id: "split-adjust" } },
+          _vm._l(_vm.splitArray, function(number, index) {
+            return _c("div", [
+              _c("span", { style: { color: _vm.colors[index] } }, [
+                _vm._v("チーム" + _vm._s(index + 1))
+              ]),
+              _vm._v("：\n        "),
+              number === 0
+                ? _c("span", [_c("i", { staticClass: "fa fa-minus-square-o" })])
+                : _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.splitArray[index]--
+                          _vm.splitArray.splice()
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fa fa-minus-square-o" })]
+                  ),
+              _vm._v("\n          " + _vm._s(number) + "\n        "),
+              _c(
+                "a",
+                {
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      _vm.splitArray[index]++
+                      _vm.splitArray.splice()
+                    }
                   }
-                }
-              },
-              [_c("i", { staticClass: "fa fa-minus-square-o" })]
-            ),
-            _vm._v("\n        " + _vm._s(number) + "\n      "),
-            _c(
-              "a",
-              {
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    _vm.splitArray[index]++
-                    _vm.splitArray.splice()
-                  }
-                }
-              },
-              [_c("i", { staticClass: "fa fa-plus-square-o" })]
-            )
-          ])
-        }),
+                },
+                [_c("i", { staticClass: "fa fa-plus-square-o" })]
+              )
+            ])
+          }),
+          0
+        ),
         _vm._v(" "),
         _c(
           "div",
@@ -20019,12 +20024,25 @@ var render = function() {
                 value: _vm.splitArray.length,
                 expression: "splitArray.length"
               }
-            ]
+            ],
+            staticClass: "text-right"
           },
-          [_vm._v("\n      余り：" + _vm._s(_vm.splitSurplus) + "\n    ")]
+          [
+            _c("i", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.splitSurplus !== 0,
+                  expression: "splitSurplus !== 0"
+                }
+              ],
+              staticClass: "fa fa-exclamation-triangle"
+            }),
+            _vm._v("余り：" + _vm._s(_vm.splitSurplus) + "\n    ")
+          ]
         )
-      ],
-      2
+      ]
     ),
     _vm._v(" "),
     _c(
@@ -20049,8 +20067,11 @@ var render = function() {
     _c("div", { staticClass: "mb-4" }, [
       _c(
         "button",
-        { staticClass: "btn btn-primary mb-2", on: { click: _vm.showResult } },
-        [_vm._v("結果発表")]
+        {
+          staticClass: "btn btn-primary mb-2 col-6",
+          on: { click: _vm.showResult }
+        },
+        [_vm._v("結果表示")]
       ),
       _vm._v(" "),
       _c(
@@ -20087,7 +20108,7 @@ var render = function() {
                     },
                     [_vm._v("、")]
                   ),
-                  _vm._v("\n          " + _vm._s(member) + "\n        ")
+                  _vm._v(_vm._s(member))
                 ])
               })
             ],
