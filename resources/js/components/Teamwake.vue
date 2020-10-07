@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mb-4">
-      <h2>メンバーを記入してください。<br>(改行区切り)</h2>
+      <h2>メンバーを記入してください。<br>※改行区切り</h2>
       <textarea v-model.trim="membersInText" rows=10></textarea>
       <div class="text-right mb-2">入力済：{{members.length}}人</div>
       <div>
@@ -116,14 +116,6 @@ export default {
       return this.members.length;
     },
     duplicateUser() {
-      // これだと何が重複しているかわからないので却下。
-      // const s = new Set(this.members);
-      // if (s.size != this.members.length){
-      //   return true;
-      // }else{
-      //   return false;
-      // }
-      
       for(let i = 0; i < this.members.length; i++){
         const user = this.members[i];
         for (let j = i + 1; j < this.members.length; j++){
@@ -197,7 +189,6 @@ export default {
         `結果をコピーしました！
         (${displayNow})`;
       this.copyResult = result;
-      console.log(result);
     },
     onError() {
       const now =new Date();

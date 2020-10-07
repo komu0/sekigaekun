@@ -1912,9 +1912,54 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {};
+    return {
+      membersInText: ''
+    };
+  },
+  computed: {
+    members: function members() {
+      if (this.membersInText === '') {
+        return [];
+      }
+
+      return this.membersInText.split(/\n+/);
+    },
+    membersLength: function membersLength() {
+      return this.members.length;
+    },
+    duplicateUser: function duplicateUser() {
+      for (var i = 0; i < this.members.length; i++) {
+        var user = this.members[i];
+
+        for (var j = i + 1; j < this.members.length; j++) {
+          if (user === this.members[j]) {
+            return user;
+          }
+        }
+      }
+
+      return '';
+    }
   },
   components: {},
   methods: {}
@@ -2041,13 +2086,6 @@ var bgColors = ['#FF6684', '#669BFF', '#FFFF32', '#65FF32', '#FFCC99', '#CC32FF'
       return this.members.length;
     },
     duplicateUser: function duplicateUser() {
-      // これだと何が重複しているかわからないので却下。
-      // const s = new Set(this.members);
-      // if (s.size != this.members.length){
-      //   return true;
-      // }else{
-      //   return false;
-      // }
       for (var i = 0; i < this.members.length; i++) {
         var user = this.members[i];
 
@@ -2140,7 +2178,6 @@ var bgColors = ['#FF6684', '#669BFF', '#FFFF32', '#65FF32', '#FFCC99', '#CC32FF'
       var displayNow = "".concat(H, "\u6642").concat(M, "\u5206").concat(S, "\u79D2");
       var result = "\u7D50\u679C\u3092\u30B3\u30D4\u30FC\u3057\u307E\u3057\u305F\uFF01\n        (".concat(displayNow, ")");
       this.copyResult = result;
-      console.log(result);
     },
     onError: function onError() {
       var now = new Date();
@@ -20015,9 +20052,89 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("席替えは現在準備中です。")])
+  return _c("div", [
+    _c("div", { staticClass: "mb-4" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("textarea", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model.trim",
+            value: _vm.membersInText,
+            expression: "membersInText",
+            modifiers: { trim: true }
+          }
+        ],
+        attrs: { rows: "10" },
+        domProps: { value: _vm.membersInText },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.membersInText = $event.target.value.trim()
+          },
+          blur: function($event) {
+            return _vm.$forceUpdate()
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "text-right mb-2" }, [
+        _vm._v("入力済：" + _vm._s(_vm.members.length) + "人")
+      ]),
+      _vm._v(" "),
+      _c("div", [
+        _c(
+          "span",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.duplicateUser,
+                expression: "duplicateUser"
+              }
+            ]
+          },
+          [
+            _c("i", { staticClass: "fa fa-exclamation-triangle" }),
+            _vm._v(
+              "名前「" +
+                _vm._s(_vm.duplicateUser) +
+                "」が重複しています。\n      "
+            )
+          ]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _vm._m(1)
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h2", [
+      _vm._v("メンバーを記入してください。"),
+      _c("br"),
+      _vm._v("※改行区切り")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mb-4" }, [
+      _c("div", { staticClass: "container" }, [
+        _c("div", { staticClass: "row" })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -20360,7 +20477,7 @@ var staticRenderFns = [
     return _c("h2", [
       _vm._v("メンバーを記入してください。"),
       _c("br"),
-      _vm._v("(改行区切り)")
+      _vm._v("※改行区切り")
     ])
   }
 ]
