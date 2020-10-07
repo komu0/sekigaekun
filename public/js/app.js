@@ -1981,13 +1981,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var colors = ['#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF', '#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF', '#FF0033', '#3300FF', '#CCCC00', '#33CC00', '#FF9933', '#9900CC', '#FF33CC', '#33CCFF'];
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       membersInText: '',
       splitNumber: 2,
       splitArray: [],
-      resultArray: []
+      resultArray: [],
+      colors: colors
     };
   },
   computed: {
@@ -2039,7 +2050,7 @@ __webpack_require__.r(__webpack_exports__);
     remakeSplitArray: function remakeSplitArray() {
       var array = [];
 
-      if (this.members.length < this.splitNumber) {} else {
+      if (this.members.length >= this.splitNumber) {
         var less = Math.floor(this.members.length / this.splitNumber);
         var surplus = this.members.length % this.splitNumber;
 
@@ -19945,13 +19956,27 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "mb-4", attrs: { id: "split-adjust" } },
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.splitArray.length,
+            expression: "splitArray.length"
+          }
+        ],
+        staticClass: "mb-4",
+        attrs: { id: "split-adjust" }
+      },
       [
         _c("h2", { staticClass: "mb-0" }, [_vm._v("何人ずつに分けますか。")]),
         _vm._v(" "),
         _vm._l(_vm.splitArray, function(number, index) {
           return _c("div", [
-            _vm._v("\n      チーム" + _vm._s(index + 1) + "：\n      "),
+            _c("span", { style: { color: _vm.colors[index] } }, [
+              _vm._v("チーム" + _vm._s(index + 1))
+            ]),
+            _vm._v("：\n      "),
             _c(
               "a",
               {
@@ -19966,7 +19991,7 @@ var render = function() {
               },
               [_c("i", { staticClass: "fa fa-minus-square-o" })]
             ),
-            _vm._v("\n        " + _vm._s(_vm.splitArray[index]) + "\n      "),
+            _vm._v("\n        " + _vm._s(number) + "\n      "),
             _c(
               "a",
               {
@@ -20002,10 +20027,29 @@ var render = function() {
       2
     ),
     _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: !_vm.splitArray.length,
+            expression: "!splitArray.length"
+          }
+        ],
+        staticClass: "mb-4"
+      },
+      [
+        _c("i", { staticClass: "fa fa-exclamation-triangle" }),
+        _vm._v("チーム数を減らすかメンバーを増やしてください。\n  ")
+      ]
+    ),
+    _vm._v(" "),
     _c("div", { staticClass: "mb-4" }, [
       _c(
         "button",
-        { staticClass: "btn btn-primary", on: { click: _vm.showResult } },
+        { staticClass: "btn btn-primary mb-2", on: { click: _vm.showResult } },
         [_vm._v("結果発表")]
       ),
       _vm._v(" "),
@@ -20021,7 +20065,36 @@ var render = function() {
             }
           ]
         },
-        [_vm._v("\n      " + _vm._s(_vm.resultArray) + "\n    ")]
+        _vm._l(_vm.resultArray, function(result, key, i) {
+          return _c(
+            "div",
+            { style: { color: _vm.colors[i] } },
+            [
+              _vm._v("\n        " + _vm._s(key) + "→\n        "),
+              _vm._l(result, function(member, j) {
+                return _c("span", [
+                  _c(
+                    "span",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: j !== 0,
+                          expression: "j !== 0"
+                        }
+                      ]
+                    },
+                    [_vm._v("、")]
+                  ),
+                  _vm._v("\n          " + _vm._s(member) + "\n        ")
+                ])
+              })
+            ],
+            2
+          )
+        }),
+        0
       )
     ])
   ])

@@ -23,14 +23,14 @@
         </button>
       </div>
     </div>
-    <div id="split-adjust" class="mb-4">
+    <div v-show="splitArray.length" id="split-adjust" class="mb-4">
       <h2 class="mb-0">何人ずつに分けますか。</h2>
       <div v-for="(number, index) in splitArray">
-        チーム{{index + 1}}：
+        <span :style="{color: colors[index]}">チーム{{index + 1}}</span>：
         <a href="#" @click.prevent="splitArray[index]--; splitArray.splice();">
           <i class="fa fa-minus-square-o"></i>
         </a>
-          {{splitArray[index]}}
+          {{number}}
         <a href="#" @click.prevent="splitArray[index]++; splitArray.splice();">
           <i class="fa fa-plus-square-o"></i>
         </a>
@@ -39,16 +39,30 @@
         余り：{{splitSurplus}}
       </div>
     </div>
+    <div v-show="!splitArray.length" class="mb-4">
+      <i class="fa fa-exclamation-triangle"></i>チーム数を減らすかメンバーを増やしてください。
+    </div>
     <div class="mb-4">
-      <button class="btn btn-primary" @click="showResult">結果発表</button>
+      <button class="btn btn-primary mb-2" @click="showResult">結果発表</button>
       <div v-show="Object.keys(resultArray).length > 0">
-        {{resultArray}}
+        <div v-for="(result, key, i) in resultArray" :style="{color: colors[i]}">
+          {{key}}→
+          <span v-for="(member, j) in result">
+            <span v-show="j !== 0">、</span>
+            {{member}}
+          </span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+const colors = [
+  '#FF0033','#3300FF','#CCCC00','#33CC00','#FF9933', '#9900CC', '#FF33CC', '#33CCFF',
+  '#FF0033','#3300FF','#CCCC00','#33CC00','#FF9933', '#9900CC', '#FF33CC', '#33CCFF',
+  '#FF0033','#3300FF','#CCCC00','#33CC00','#FF9933', '#9900CC', '#FF33CC', '#33CCFF',
+];
 export default {
   data () {
     return {
@@ -56,6 +70,7 @@ export default {
       splitNumber: 2,
       splitArray: [],
       resultArray: [],
+      colors,
     };
   },
   computed: {
@@ -103,8 +118,7 @@ export default {
   methods: {
     remakeSplitArray() {
       const array = [];
-      if (this.members.length < this.splitNumber) {
-      } else {
+      if (this.members.length >= this.splitNumber) {
         const less = Math.floor(this.members.length / this.splitNumber);
         const surplus = this.members.length % this.splitNumber;
         for(let i = 0; i < surplus; i++) {
