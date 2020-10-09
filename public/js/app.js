@@ -2294,15 +2294,96 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      modeOfFunction: 'same'
+      modeOfFunction: 'same',
+      membersInText: '',
+      personFee: 0,
+      totalFee: 0
     };
   },
-  computed: {},
+  computed: {
+    members: function members() {
+      if (this.membersInText === '') {
+        return [];
+      }
+
+      return this.membersInText.split(/\n+/);
+    },
+    duplicateUser: function duplicateUser() {
+      for (var i = 0; i < this.members.length; i++) {
+        var user = this.members[i];
+
+        for (var j = i + 1; j < this.members.length; j++) {
+          if (user === this.members[j]) {
+            return user;
+          }
+        }
+      }
+
+      return '';
+    },
+    fees: function fees() {}
+  },
   components: {},
-  methods: {}
+  methods: {
+    inputPersonFee: function inputPersonFee(event) {
+      this.personFee = event.target.value;
+      this.totalFee = this.personFee * this.members.length;
+    },
+    inputTotalFee: function inputTotalFee(event) {
+      this.totalFee = event.target.value;
+      this.personFee = Math.round(this.totalFee * 100 / this.members.length) / 100;
+    },
+    checkFee: function checkFee() {
+      if (this.personFee === '') {
+        this.personFee = 0;
+      }
+
+      if (this.totalFee === '') {
+        this.totalFee = 0;
+      }
+    }
+  }
 });
 
 /***/ }),
@@ -20755,7 +20836,94 @@ var render = function() {
           }
         ]
       },
-      [_c("div", [_vm._v("同じ金額です。")])]
+      [
+        _c("div", { staticClass: "mb-4" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model.trim",
+                value: _vm.membersInText,
+                expression: "membersInText",
+                modifiers: { trim: true }
+              }
+            ],
+            attrs: { rows: "10" },
+            domProps: { value: _vm.membersInText },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.membersInText = $event.target.value.trim()
+              },
+              blur: function($event) {
+                return _vm.$forceUpdate()
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "text-right mb-2" }, [
+            _vm._v("入力済：" + _vm._s(_vm.members.length) + "人")
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "span",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.duplicateUser,
+                    expression: "duplicateUser"
+                  }
+                ]
+              },
+              [
+                _c("i", { staticClass: "fa fa-exclamation-triangle" }),
+                _vm._v(
+                  "名前「" +
+                    _vm._s(_vm.duplicateUser) +
+                    "」が重複しています。\n        "
+                )
+              ]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mb-4" }, [
+          _c("h2", [_vm._v("一人当たりの金額か合計金額を入力してください。")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "container" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-7 p-0" }, [
+                _vm._v("\n            一人当たりの金額：\n          ")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "col-5 p-0",
+                domProps: { value: _vm.personFee },
+                on: { input: _vm.inputPersonFee, focusout: _vm.checkFee }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-7 p-0" }, [
+                _vm._v("\n            合計金額：\n          ")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "col-5 p-0",
+                domProps: { value: _vm.totalFee },
+                on: { input: _vm.inputTotalFee, focusout: _vm.checkFee }
+              })
+            ])
+          ])
+        ])
+      ]
     ),
     _vm._v(" "),
     _c(
@@ -20774,7 +20942,18 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h2", [
+      _vm._v("メンバーを記入してください。"),
+      _c("br"),
+      _vm._v("※改行区切り")
+    ])
+  }
+]
 render._withStripped = true
 
 
