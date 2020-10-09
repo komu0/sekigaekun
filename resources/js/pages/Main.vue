@@ -23,6 +23,13 @@
           @click="modeOfFunction = 'teamwake'">
             チーム分け
         </button>
+        <button
+          type="button"
+          class="btn col-6 d-inline"
+          :class="{'btn-primary': modeOfFunction === 'warikan', 'btn-secondary': modeOfFunction !== 'warikan'}"
+          @click="modeOfFunction = 'warikan'">
+            割り勘
+        </button>
       </div>
     </div>
     <section>
@@ -32,6 +39,9 @@
       <section v-show="modeOfFunction === 'teamwake'">
         <Teamwake />
       </section>
+      <section v-show="modeOfFunction === 'warikan'">
+        <Warikan />
+      </section>
     </section>
   </div>
 </template>
@@ -39,6 +49,7 @@
 <script>
 import Sekigae from '../components/Sekigae.vue';
 import Teamwake from '../components/Teamwake.vue';
+import Warikan from '../components/Warikan.vue';
 export default {
   data () {
     return {
@@ -48,6 +59,7 @@ export default {
   components: {
     Sekigae,
     Teamwake,
+    Warikan,
   },
   methods: {
   }
