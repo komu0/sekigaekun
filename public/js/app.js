@@ -2332,6 +2332,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2362,24 +2370,44 @@ __webpack_require__.r(__webpack_exports__);
 
       return '';
     },
-    fees: function fees() {}
+    fees: function fees() {
+      var result = {
+        manager: {
+          low: {},
+          high: {}
+        },
+        other: {
+          low: {},
+          high: {}
+        }
+      };
+      result.manager.low.fee = Math.floor((this.personFee + 1000 - this.totalFee % 1000) / 1000) * 1000 + this.totalFee % 1000 - 1000;
+      result.manager.high.fee = result.manager.low.fee + 1000;
+      result.other.low.fee = Math.floor(this.personFee / 1000) * 1000;
+      result.other.high.fee = result.other.low.fee + 1000;
+      result.manager.low.rate = (result.manager.high.fee - this.personFee) / 1000;
+      result.manager.high.rate = 1 - result.manager.low.rate;
+      result.other.low.rate = (result.other.high.fee - this.personFee) / 1000;
+      result.other.high.rate = 1 - result.other.low.rate;
+      return result;
+    }
   },
   components: {},
   methods: {
     inputPersonFee: function inputPersonFee(event) {
-      this.personFee = event.target.value;
+      this.personFee = parseFloat(event.target.value);
       this.totalFee = this.personFee * this.members.length;
     },
     inputTotalFee: function inputTotalFee(event) {
-      this.totalFee = event.target.value;
+      this.totalFee = parseFloat(event.target.value);
       this.personFee = Math.round(this.totalFee * 100 / this.members.length) / 100;
     },
     checkFee: function checkFee() {
-      if (this.personFee === '') {
+      if (isNaN(this.personFee)) {
         this.personFee = 0;
       }
 
-      if (this.totalFee === '') {
+      if (isNaN(this.totalFee)) {
         this.totalFee = 0;
       }
     }
@@ -20905,6 +20933,7 @@ var render = function() {
               _vm._v(" "),
               _c("input", {
                 staticClass: "col-5 p-0",
+                attrs: { type: "number" },
                 domProps: { value: _vm.personFee },
                 on: { input: _vm.inputPersonFee, focusout: _vm.checkFee }
               })
@@ -20917,11 +20946,17 @@ var render = function() {
               _vm._v(" "),
               _c("input", {
                 staticClass: "col-5 p-0",
+                attrs: { type: "number" },
                 domProps: { value: _vm.totalFee },
                 on: { input: _vm.inputTotalFee, focusout: _vm.checkFee }
               })
             ])
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mb-4" }, [
+          _c("h2", [_vm._v("一人当たりの金額か合計金額を入力してください。")]),
+          _vm._v("\n      " + _vm._s(_vm.fees) + "\n    ")
         ])
       ]
     ),
@@ -20950,7 +20985,9 @@ var staticRenderFns = [
     return _c("h2", [
       _vm._v("メンバーを記入してください。"),
       _c("br"),
-      _vm._v("※改行区切り")
+      _vm._v("\n      ※改行区切り"),
+      _c("br"),
+      _vm._v("\n      ※支払いを行う人を一番上に書いてください。")
     ])
   }
 ]
