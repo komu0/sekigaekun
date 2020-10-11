@@ -42,12 +42,10 @@ export default {
       lows.some((low, i)=>{
         let lowData = {};
         if(low.split('、').length !== 2){
-          console.log('入力不足');
           this.errorText = `入力ミスがあります。[${i+1}行目]`;
           return true;
         }
         if(!parseFloat(low.split('、')[1])){
-          console.log('数値形式');
           this.errorText = `数値の形式が違います。[${i+1}行目]`;
           return true;
         }
@@ -63,9 +61,11 @@ export default {
         totalFee += obj.fee;
       });
       let sumOfLow = 0;
+      let highRates = [];
       datas.forEach((obj, i)=>{
         obj.low = {};
         obj.high = {};
+        obj.sacrifice = [];
         if (i === 0){
           obj.low.fee = Math.floor(((obj.fee + 1000)-(totalFee % 1000))/1000)*1000 + totalFee % 1000 - 1000;
         } else {
@@ -75,9 +75,40 @@ export default {
         obj.low.rate = obj.high.fee - obj.fee;
         obj.high.rate = 1000 - obj.low.rate;
         sumOfLow += obj.low.fee;
+        highRates.push(obj.high.rate);
       });
       this.numberOfHighPay = ( totalFee - sumOfLow ) / 1000;
       this.totalFee = totalFee;
+      
+      //highRates=[600,600,800]、numberOfHighPay=2
+      for(let time = 0; time < 1000; time++){
+        const result = [];
+        [...Array(this.numberOfHighPay)].some(() => {
+          const pushObj = {};
+          pushObj.rate2 = 0;
+          pushObj.index2 = 0;
+          result.push(pushObj);
+        });
+        highRates.some((step, i)=>{
+          console.log('i',i);
+          [...Array(this.numberOfHighPay)].some((undif,j) => {
+            console.log('result[0].rate2',result[0].rate2);
+            if(step > result[j].rate2){
+              if (j !== this.numberOfHighPay - 1) {
+                result[j+1].rate2 = result[j].rate2;
+                result[j+1].index2 = result[j].index2;
+              }
+              result[j].rate2 = step;
+              result[j].index2 = i;
+              return true;
+            }
+          });
+        });
+        result.forEach((obj)=>{
+          highRates[obj.index2]--;
+          datas[obj.index2].sacrifice.push(time);
+        });
+      }
       return datas;
     },
     duplicateUser() {

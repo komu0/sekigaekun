@@ -2323,6 +2323,18 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 //
 //
 //
@@ -2372,13 +2384,11 @@ __webpack_require__.r(__webpack_exports__);
         var lowData = {};
 
         if (low.split('、').length !== 2) {
-          console.log('入力不足');
           _this.errorText = "\u5165\u529B\u30DF\u30B9\u304C\u3042\u308A\u307E\u3059\u3002[".concat(i + 1, "\u884C\u76EE]");
           return true;
         }
 
         if (!parseFloat(low.split('、')[1])) {
-          console.log('数値形式');
           _this.errorText = "\u6570\u5024\u306E\u5F62\u5F0F\u304C\u9055\u3044\u307E\u3059\u3002[".concat(i + 1, "\u884C\u76EE]");
           return true;
         }
@@ -2397,9 +2407,11 @@ __webpack_require__.r(__webpack_exports__);
         totalFee += obj.fee;
       });
       var sumOfLow = 0;
+      var highRates = [];
       datas.forEach(function (obj, i) {
         obj.low = {};
         obj.high = {};
+        obj.sacrifice = [];
 
         if (i === 0) {
           obj.low.fee = Math.floor((obj.fee + 1000 - totalFee % 1000) / 1000) * 1000 + totalFee % 1000 - 1000;
@@ -2411,9 +2423,49 @@ __webpack_require__.r(__webpack_exports__);
         obj.low.rate = obj.high.fee - obj.fee;
         obj.high.rate = 1000 - obj.low.rate;
         sumOfLow += obj.low.fee;
+        highRates.push(obj.high.rate);
       });
       this.numberOfHighPay = (totalFee - sumOfLow) / 1000;
-      this.totalFee = totalFee;
+      this.totalFee = totalFee; //highRates=[600,600,800]、numberOfHighPay=2
+
+      var _loop = function _loop(time) {
+        var result = [];
+
+        _toConsumableArray(Array(_this.numberOfHighPay)).some(function () {
+          var pushObj = {};
+          pushObj.rate2 = 0;
+          pushObj.index2 = 0;
+          result.push(pushObj);
+        });
+
+        highRates.some(function (step, i) {
+          console.log('i', i);
+
+          _toConsumableArray(Array(_this.numberOfHighPay)).some(function (undif, j) {
+            console.log('result[0].rate2', result[0].rate2);
+
+            if (step > result[j].rate2) {
+              if (j !== _this.numberOfHighPay - 1) {
+                result[j + 1].rate2 = result[j].rate2;
+                result[j + 1].index2 = result[j].index2;
+              }
+
+              result[j].rate2 = step;
+              result[j].index2 = i;
+              return true;
+            }
+          });
+        });
+        result.forEach(function (obj) {
+          highRates[obj.index2]--;
+          datas[obj.index2].sacrifice.push(time);
+        });
+      };
+
+      for (var time = 0; time < 1000; time++) {
+        _loop(time);
+      }
+
       return datas;
     },
     duplicateUser: function duplicateUser() {
@@ -36767,6 +36819,17 @@ new vue__WEBPACK_IMPORTED_MODULE_2___default.a({
   //   index.blade.php内の<div id="app"></div>が<App />になり、それがコンポーネントになる。
   //   { App }はApp.vueということだから、App.vueに置き換わるということ。
 
+});
+
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.config.errorHandler = function (err, vm, info) {
+  console.log("Captured in Vue.config.errorHandler: ".concat(info), err);
+};
+
+window.addEventListener("error", function (event) {
+  console.log("Captured in error EventListener", event.error);
+});
+window.addEventListener("unhandledrejection", function (event) {
+  console.log("Captured in unhandledrejection EventListener", event.reason);
 });
 
 /***/ }),

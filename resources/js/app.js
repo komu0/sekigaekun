@@ -19,3 +19,14 @@ new Vue({
 //   index.blade.php内の<div id="app"></div>が<App />になり、それがコンポーネントになる。
 //   { App }はApp.vueということだから、App.vueに置き換わるということ。
 });
+
+
+Vue.config.errorHandler = (err, vm, info) => {
+  console.log(`Captured in Vue.config.errorHandler: ${info}`, err);
+};
+window.addEventListener("error", event => {
+  console.log("Captured in error EventListener", event.error);
+});
+window.addEventListener("unhandledrejection", event => {
+  console.log("Captured in unhandledrejection EventListener", event.reason);
+});
