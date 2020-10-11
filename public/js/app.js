@@ -2344,11 +2344,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       membersInText: '',
-      errorText: ''
+      errorText: '',
+      totalFee: 0
     };
   },
   computed: {
@@ -2387,7 +2389,25 @@ __webpack_require__.r(__webpack_exports__);
         return [];
       }
 
-      console.log(datas);
+      var totalFee = 0;
+      datas.forEach(function (obj) {
+        totalFee += obj.fee;
+      });
+      datas.forEach(function (obj, i) {
+        obj.low = {};
+        obj.high = {};
+
+        if (i === 0) {
+          obj.low.fee = Math.floor((obj.fee + 1000 - totalFee % 1000) / 1000) * 1000 + totalFee % 1000 - 1000;
+        } else {
+          obj.low.fee = Math.floor(obj.fee / 1000) * 1000;
+        }
+
+        obj.high.fee = obj.low.fee + 1000;
+        obj.low.rate = obj.high.fee - obj.fee;
+        obj.high.rate = 1000 - obj.low.rate;
+      });
+      this.totalFee = totalFee;
       return datas;
     },
     duplicateUser: function duplicateUser() {
@@ -21108,7 +21128,9 @@ var render = function() {
           ]
         )
       ]),
-      _vm._v("\n    " + _vm._s(_vm.datas) + "\n  ")
+      _vm._v(
+        "\n    " + _vm._s(_vm.datas) + "\n    " + _vm._s(_vm.totalFee) + "\n  "
+      )
     ])
   ])
 }

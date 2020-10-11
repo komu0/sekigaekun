@@ -15,6 +15,7 @@
         </span>
       </div>
       {{datas}}
+      {{totalFee}}
     </div>
   </div>
 </template>
@@ -24,7 +25,8 @@ export default {
   data () {
     return {
       membersInText: '',
-      errorText:'',
+      errorText: '',
+      totalFee: 0
     };
   },
   computed: {
@@ -54,7 +56,23 @@ export default {
       if(this.errorText){
         return [];
       }
-      console.log(datas);
+      let totalFee = 0;
+      datas.forEach((obj)=>{
+        totalFee += obj.fee;
+      });
+      datas.forEach((obj, i)=>{
+        obj.low = {};
+        obj.high = {};
+        if (i === 0){
+          obj.low.fee = Math.floor(((obj.fee + 1000)-(totalFee % 1000))/1000)*1000 + totalFee % 1000 - 1000;
+        } else {
+          obj.low.fee = Math.floor(obj.fee / 1000) * 1000;
+        }
+        obj.high.fee = obj.low.fee + 1000;
+        obj.low.rate = obj.high.fee - obj.fee;
+        obj.high.rate = 1000 - obj.low.rate;
+      });
+      this.totalFee = totalFee;
       return datas;
     },
     duplicateUser() {
