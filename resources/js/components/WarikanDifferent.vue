@@ -16,6 +16,7 @@
       </div>
       {{datas}}
       {{totalFee}}
+      {{numberOfHighPay}}
     </div>
   </div>
 </template>
@@ -26,7 +27,8 @@ export default {
     return {
       membersInText: '',
       errorText: '',
-      totalFee: 0
+      totalFee: 0,
+      numberOfHighPay: 0, //高いほうを払う羽目になる人の数。
     };
   },
   computed: {
@@ -60,6 +62,7 @@ export default {
       datas.forEach((obj)=>{
         totalFee += obj.fee;
       });
+      let sumOfLow = 0;
       datas.forEach((obj, i)=>{
         obj.low = {};
         obj.high = {};
@@ -71,7 +74,9 @@ export default {
         obj.high.fee = obj.low.fee + 1000;
         obj.low.rate = obj.high.fee - obj.fee;
         obj.high.rate = 1000 - obj.low.rate;
+        sumOfLow += obj.low.fee;
       });
+      this.numberOfHighPay = ( totalFee - sumOfLow ) / 1000;
       this.totalFee = totalFee;
       return datas;
     },

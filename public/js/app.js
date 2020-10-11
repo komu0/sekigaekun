@@ -2345,12 +2345,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       membersInText: '',
       errorText: '',
-      totalFee: 0
+      totalFee: 0,
+      numberOfHighPay: 0 //高いほうを払う羽目になる人の数。
+
     };
   },
   computed: {
@@ -2393,6 +2396,7 @@ __webpack_require__.r(__webpack_exports__);
       datas.forEach(function (obj) {
         totalFee += obj.fee;
       });
+      var sumOfLow = 0;
       datas.forEach(function (obj, i) {
         obj.low = {};
         obj.high = {};
@@ -2406,7 +2410,9 @@ __webpack_require__.r(__webpack_exports__);
         obj.high.fee = obj.low.fee + 1000;
         obj.low.rate = obj.high.fee - obj.fee;
         obj.high.rate = 1000 - obj.low.rate;
+        sumOfLow += obj.low.fee;
       });
+      this.numberOfHighPay = (totalFee - sumOfLow) / 1000;
       this.totalFee = totalFee;
       return datas;
     },
@@ -21129,7 +21135,13 @@ var render = function() {
         )
       ]),
       _vm._v(
-        "\n    " + _vm._s(_vm.datas) + "\n    " + _vm._s(_vm.totalFee) + "\n  "
+        "\n    " +
+          _vm._s(_vm.datas) +
+          "\n    " +
+          _vm._s(_vm.totalFee) +
+          "\n    " +
+          _vm._s(_vm.numberOfHighPay) +
+          "\n  "
       )
     ])
   ])
