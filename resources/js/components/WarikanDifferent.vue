@@ -14,6 +14,7 @@
           <i class="fa fa-exclamation-triangle"></i>{{errorText}}
         </span>
       </div>
+      {{datas}}
     </div>
   </div>
 </template>
@@ -28,33 +29,39 @@ export default {
   },
   computed: {
     datas() {
+      this.errorText = '';
       if (this.membersInText === ''){
         return [];
       }
       const lows = this.membersInText.split(/\n+/);
       let datas = [];
-      lows.forEach((low, i)=>{
-        let lowArray = [];
+      lows.some((low, i)=>{
+        let lowData = {};
         if(low.split('、').length !== 2){
-          this.errorText = `入力に不足があります。[${i}行目]`;
-          return[];
+          console.log('入力不足');
+          this.errorText = `入力ミスがあります。[${i+1}行目]`;
+          return true;
         }
         if(!parseFloat(low.split('、')[1])){
-          this.errorText = `数値の形式が違います。[${i}行目]`;
+          console.log('数値形式');
+          this.errorText = `数値の形式が違います。[${i+1}行目]`;
+          return true;
         }
-        lowArray.push(low.split('、')[0]);
-        lowArray.push(parseFloat(low.split('、')[1]));
-        datas.push(lowArray);
+        lowData.name = low.split('、')[0];
+        lowData.fee = parseFloat(low.split('、')[1]);
+        datas.push(lowData);
       });
+      if(this.errorText){
+        return [];
+      }
       console.log(datas);
-      this.errorText = '';
       return datas;
     },
     duplicateUser() {
       for(let i = 0; i < this.datas.length; i++){
-        const user = this.datas[i][0];
+        const user = this.datas[i].name;
         for (let j = i + 1; j < this.datas.length; j++){
-          if (user === this.datas[j][0]) {
+          if (user === this.datas[j].name) {
             return user;
           }
         }

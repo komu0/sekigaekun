@@ -2343,6 +2343,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2354,38 +2355,47 @@ __webpack_require__.r(__webpack_exports__);
     datas: function datas() {
       var _this = this;
 
+      this.errorText = '';
+
       if (this.membersInText === '') {
         return [];
       }
 
       var lows = this.membersInText.split(/\n+/);
       var datas = [];
-      lows.forEach(function (low, i) {
-        var lowArray = [];
+      lows.some(function (low, i) {
+        var lowData = {};
 
         if (low.split('、').length !== 2) {
-          _this.errorText = "\u5165\u529B\u306B\u4E0D\u8DB3\u304C\u3042\u308A\u307E\u3059\u3002[".concat(i, "\u884C\u76EE]");
-          return [];
+          console.log('入力不足');
+          _this.errorText = "\u5165\u529B\u30DF\u30B9\u304C\u3042\u308A\u307E\u3059\u3002[".concat(i + 1, "\u884C\u76EE]");
+          return true;
         }
 
         if (!parseFloat(low.split('、')[1])) {
-          _this.errorText = "\u6570\u5024\u306E\u5F62\u5F0F\u304C\u9055\u3044\u307E\u3059\u3002[".concat(i, "\u884C\u76EE]");
+          console.log('数値形式');
+          _this.errorText = "\u6570\u5024\u306E\u5F62\u5F0F\u304C\u9055\u3044\u307E\u3059\u3002[".concat(i + 1, "\u884C\u76EE]");
+          return true;
         }
 
-        lowArray.push(low.split('、')[0]);
-        lowArray.push(parseFloat(low.split('、')[1]));
-        datas.push(lowArray);
+        lowData.name = low.split('、')[0];
+        lowData.fee = parseFloat(low.split('、')[1]);
+        datas.push(lowData);
       });
+
+      if (this.errorText) {
+        return [];
+      }
+
       console.log(datas);
-      this.errorText = '';
       return datas;
     },
     duplicateUser: function duplicateUser() {
       for (var i = 0; i < this.datas.length; i++) {
-        var user = this.datas[i][0];
+        var user = this.datas[i].name;
 
         for (var j = i + 1; j < this.datas.length; j++) {
-          if (user === this.datas[j][0]) {
+          if (user === this.datas[j].name) {
             return user;
           }
         }
@@ -21097,7 +21107,8 @@ var render = function() {
             _vm._v(_vm._s(_vm.errorText) + "\n      ")
           ]
         )
-      ])
+      ]),
+      _vm._v("\n    " + _vm._s(_vm.datas) + "\n  ")
     ])
   ])
 }
