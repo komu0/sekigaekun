@@ -2323,18 +2323,30 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2364,8 +2376,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       membersInText: '',
       errorText: '',
       totalFee: 0,
-      numberOfHighPay: 0 //高いほうを払う羽目になる人の数。
-
+      displayDatas: '',
+      numberOfSacrifice: 0,
+      //高いほうを払う羽目になる人の数。
+      randArray: []
     };
   },
   computed: {
@@ -2378,30 +2392,53 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         return [];
       }
 
-      var lows = this.membersInText.split(/\n+/);
+      var rows = this.membersInText.split(/\n+/);
       var datas = [];
-      lows.some(function (low, i) {
-        var lowData = {};
+      rows.some(function (row, i) {
+        var rowData = {};
 
-        if (low.split('、').length !== 2) {
+        if (row.split('、').length !== 2) {
           _this.errorText = "\u5165\u529B\u30DF\u30B9\u304C\u3042\u308A\u307E\u3059\u3002[".concat(i + 1, "\u884C\u76EE]");
           return true;
         }
 
-        if (!parseFloat(low.split('、')[1])) {
+        if (!parseFloat(row.split('、')[1])) {
           _this.errorText = "\u6570\u5024\u306E\u5F62\u5F0F\u304C\u9055\u3044\u307E\u3059\u3002[".concat(i + 1, "\u884C\u76EE]");
           return true;
         }
 
-        lowData.name = low.split('、')[0];
-        lowData.fee = parseFloat(low.split('、')[1]);
-        datas.push(lowData);
+        rowData.name = row.split('、')[0];
+        rowData.fee = parseFloat(row.split('、')[1]);
+        datas.push(rowData);
       });
 
       if (this.errorText) {
         return [];
       }
 
+      return datas;
+    },
+    duplicateUser: function duplicateUser() {
+      for (var i = 0; i < this.datas.length; i++) {
+        var user = this.datas[i].name;
+
+        for (var j = i + 1; j < this.datas.length; j++) {
+          if (user === this.datas[j].name) {
+            return user;
+          }
+        }
+      }
+
+      return '';
+    }
+  },
+  components: {},
+  methods: {
+    prepared: function prepared() {
+      var _this2 = this;
+
+      var datas = this.datas;
+      var displayDatas = [];
       var totalFee = 0;
       datas.forEach(function (obj) {
         totalFee += obj.fee;
@@ -2423,67 +2460,53 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         obj.low.rate = obj.high.fee - obj.fee;
         obj.high.rate = 1000 - obj.low.rate;
         sumOfLow += obj.low.fee;
-        highRates.push(obj.high.rate);
+        var pushObj = {};
+        pushObj.rate = obj.high.rate;
+        pushObj.index = i;
+        highRates.push(pushObj);
+        displayDatas[i] = {};
+        displayDatas[i].name = obj.name;
+        displayDatas[i].fee = [];
+        displayDatas[i].isHigh = [];
       });
-      this.numberOfHighPay = (totalFee - sumOfLow) / 1000;
-      this.totalFee = totalFee; //highRates=[600,600,800]、numberOfHighPay=2
-
-      var _loop = function _loop(time) {
-        var result = [];
-
-        _toConsumableArray(Array(_this.numberOfHighPay)).some(function () {
-          var pushObj = {};
-          pushObj.rate2 = 0;
-          pushObj.index2 = 0;
-          result.push(pushObj);
-        });
-
-        highRates.some(function (step, i) {
-          console.log('i', i);
-
-          _toConsumableArray(Array(_this.numberOfHighPay)).some(function (undif, j) {
-            console.log('result[0].rate2', result[0].rate2);
-
-            if (step > result[j].rate2) {
-              if (j !== _this.numberOfHighPay - 1) {
-                result[j + 1].rate2 = result[j].rate2;
-                result[j + 1].index2 = result[j].index2;
-              }
-
-              result[j].rate2 = step;
-              result[j].index2 = i;
-              return true;
-            }
-          });
-        });
-        result.forEach(function (obj) {
-          highRates[obj.index2]--;
-          datas[obj.index2].sacrifice.push(time);
-        });
-      };
+      this.numberOfSacrifice = (totalFee - sumOfLow) / 1000; //highRates=[{'rate':600,'index':0},{},{}]、numberOfSacrifice=2
 
       for (var time = 0; time < 1000; time++) {
-        _loop(time);
-      }
-
-      return datas;
-    },
-    duplicateUser: function duplicateUser() {
-      for (var i = 0; i < this.datas.length; i++) {
-        var user = this.datas[i].name;
-
-        for (var j = i + 1; j < this.datas.length; j++) {
-          if (user === this.datas[j].name) {
-            return user;
+        highRates.sort(function (a, b) {
+          if (a.rate > b.rate) return -1;
+          if (a.rate < b.rate) return 1;
+          return 0;
+        });
+        highRates.forEach(function (obj, i) {
+          if (i < _this2.numberOfSacrifice) {
+            displayDatas[obj.index].fee.push(datas[obj.index].high.fee);
+            displayDatas[obj.index].isHigh.push(1);
+            obj.rate--;
+          } else {
+            displayDatas[obj.index].fee.push(datas[obj.index].low.fee);
+            displayDatas[obj.index].isHigh.push(0);
           }
-        }
+        });
       }
 
-      return '';
+      this.displayDatas = displayDatas;
+      var randArray = [];
+
+      for (var i = 0; i < 1000; i++) {
+        randArray.push(i);
+      }
+
+      for (var _i = randArray.length - 1; _i > 0; _i--) {
+        var rand = Math.floor(Math.random() * (_i + 1));
+        var _ref = [randArray[rand], randArray[_i]];
+        randArray[_i] = _ref[0];
+        randArray[rand] = _ref[1];
+      }
+
+      this.randArray = randArray;
+      console.log(displayDatas);
     }
-  },
-  components: {},
-  methods: {}
+  }
 });
 
 /***/ }),
@@ -21185,15 +21208,67 @@ var render = function() {
             _vm._v(_vm._s(_vm.errorText) + "\n      ")
           ]
         )
-      ]),
-      _vm._v(
-        "\n    " +
-          _vm._s(_vm.datas) +
-          "\n    " +
-          _vm._s(_vm.totalFee) +
-          "\n    " +
-          _vm._s(_vm.numberOfHighPay) +
-          "\n  "
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "mb-4" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "button" },
+          on: { click: _vm.prepared }
+        },
+        [_vm._v("\n        入力完了(まだ抽選は行われません)\n    ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "table",
+        { attrs: { border: "1" } },
+        [
+          _c(
+            "tr",
+            [
+              _c("th", [_vm._v("抽選結果")]),
+              _vm._v(" "),
+              _vm._l(_vm.displayDatas, function(data) {
+                return _c("th", [
+                  _vm._v("\n            " + _vm._s(data.name) + "\n          ")
+                ])
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _vm._l(_vm.randArray, function(n, i) {
+            return _c(
+              "tr",
+              { key: n },
+              [
+                _c("td", [_vm._v(_vm._s(i + 1))]),
+                _vm._v(" "),
+                _vm._l(_vm.displayDatas, function(data) {
+                  return _c(
+                    "td",
+                    {
+                      class: {
+                        "text-danger": data.isHigh[n] === 1,
+                        "text-primary": data.isHigh[n] === 0
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n            " + _vm._s(data.fee[n]) + "\n          "
+                      )
+                    ]
+                  )
+                })
+              ],
+              2
+            )
+          })
+        ],
+        2
       )
     ])
   ])
