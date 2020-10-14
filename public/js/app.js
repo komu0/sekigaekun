@@ -2370,6 +2370,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2379,7 +2394,10 @@ __webpack_require__.r(__webpack_exports__);
       displayDatas: '',
       numberOfSacrifice: 0,
       //高いほうを払う羽目になる人の数。
-      randArray: []
+      randArray: [],
+      //0～999
+      resultNumber: 0 //0～999
+
     };
   },
   computed: {
@@ -2416,6 +2434,11 @@ __webpack_require__.r(__webpack_exports__);
         return [];
       }
 
+      var totalFee = 0;
+      datas.forEach(function (obj) {
+        totalFee += obj.fee;
+      });
+      this.totalFee = totalFee;
       return datas;
     },
     duplicateUser: function duplicateUser() {
@@ -2439,10 +2462,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var datas = this.datas;
       var displayDatas = [];
-      var totalFee = 0;
-      datas.forEach(function (obj) {
-        totalFee += obj.fee;
-      });
+      var totalFee = this.totalFee;
       var sumOfLow = 0;
       var highRates = [];
       datas.forEach(function (obj, i) {
@@ -2504,6 +2524,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.randArray = randArray;
+      this.resultNumber = Math.floor(Math.random() * 1000);
       console.log(displayDatas);
     }
   }
@@ -21165,7 +21186,13 @@ var render = function() {
       }),
       _vm._v(" "),
       _c("div", { staticClass: "text-right mb-2" }, [
-        _vm._v("入力済：" + _vm._s(_vm.datas.length) + "人")
+        _vm._v(
+          "合計金額：" +
+            _vm._s(_vm.totalFee) +
+            "円/入力済：" +
+            _vm._s(_vm.datas.length) +
+            "人"
+        )
       ]),
       _vm._v(" "),
       _c("div", [
@@ -21219,57 +21246,99 @@ var render = function() {
           attrs: { type: "button" },
           on: { click: _vm.prepared }
         },
-        [_vm._v("\n        入力完了(まだ抽選は行われません)\n    ")]
+        [_vm._v("\n      結果を表示\n    ")]
       ),
       _vm._v(" "),
       _c(
-        "table",
-        { attrs: { border: "1" } },
+        "div",
         [
-          _c(
-            "tr",
-            [
-              _c("th", [_vm._v("抽選結果")]),
-              _vm._v(" "),
-              _vm._l(_vm.displayDatas, function(data) {
-                return _c("th", [
-                  _vm._v("\n            " + _vm._s(data.name) + "\n          ")
-                ])
-              })
-            ],
-            2
+          _vm._v(
+            "\n      1から1000の数字をランダムに抽選し、" +
+              _vm._s(_vm.resultNumber + 1) +
+              "が出ました。\n      下の表と照らし合わせた結果、それぞれの支払額は以下の通りとなります。\n      "
           ),
-          _vm._v(" "),
-          _vm._l(_vm.randArray, function(n, i) {
+          _vm._l(_vm.displayDatas, function(data) {
             return _c(
-              "tr",
-              { key: n },
+              "div",
+              {
+                class: {
+                  "text-danger":
+                    data.isHigh[_vm.randArray[_vm.resultNumber]] === 1,
+                  "text-primary":
+                    data.isHigh[_vm.randArray[_vm.resultNumber]] === 0
+                }
+              },
               [
-                _c("td", [_vm._v(_vm._s(i + 1))]),
-                _vm._v(" "),
-                _vm._l(_vm.displayDatas, function(data) {
-                  return _c(
-                    "td",
-                    {
-                      class: {
-                        "text-danger": data.isHigh[n] === 1,
-                        "text-primary": data.isHigh[n] === 0
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n            " + _vm._s(data.fee[n]) + "\n          "
-                      )
-                    ]
-                  )
-                })
-              ],
-              2
+                _vm._v(
+                  "\n        " +
+                    _vm._s(data.name) +
+                    "：" +
+                    _vm._s(data.fee[_vm.randArray[_vm.resultNumber]]) +
+                    "\n      "
+                )
+              ]
             )
           })
         ],
         2
-      )
+      ),
+      _vm._v(" "),
+      _c("div", { staticStyle: { "overflow-x": "auto" } }, [
+        _c(
+          "table",
+          { attrs: { border: "1", align: "center" } },
+          [
+            _c(
+              "tr",
+              [
+                _c("th", [_vm._v("抽選結果")]),
+                _vm._v(" "),
+                _vm._l(_vm.displayDatas, function(data) {
+                  return _c("th", [
+                    _vm._v(
+                      "\n            " + _vm._s(data.name) + "\n          "
+                    )
+                  ])
+                })
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _vm._l(_vm.randArray, function(n, i) {
+              return _c(
+                "tr",
+                { key: n },
+                [
+                  _c("td", { class: { "bg-danger": _vm.resultNumber === i } }, [
+                    _vm._v("\n            " + _vm._s(i + 1) + "\n          ")
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.displayDatas, function(data) {
+                    return _c(
+                      "td",
+                      {
+                        class: {
+                          "text-danger": data.isHigh[n] === 1,
+                          "text-primary": data.isHigh[n] === 0
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n            " +
+                            _vm._s(data.fee[n]) +
+                            "\n          "
+                        )
+                      ]
+                    )
+                  })
+                ],
+                2
+              )
+            })
+          ],
+          2
+        )
+      ])
     ])
   ])
 }

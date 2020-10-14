@@ -5,7 +5,7 @@
       ※「メンバー、金額」の形で改行区切り<br>
       ※支払いを行う人を一番上に書いてください。</h2>
       <textarea v-model.trim="membersInText" rows=10></textarea>
-      <div class="text-right mb-2">入力済：{{datas.length}}人</div>
+      <div class="text-right mb-2">合計金額：{{totalFee}}円/入力済：{{datas.length}}人</div>
       <div>
         <span v-show="duplicateUser">
           <i class="fa fa-exclamation-triangle"></i>名前「{{duplicateUser}}」が重複しています。
@@ -17,9 +17,19 @@
     </div>
     <div class="mb-4">
       <button type="button" class="btn btn-primary" @click="prepared">
-          入力完了(まだ抽選は行われません)
+        結果を表示
       </button>
-       <table border="1">
+      <div>
+        1から1000の数字をランダムに抽選し、{{resultNumber + 1}}が出ました。
+        下の表と照らし合わせた結果、それぞれの支払額は以下の通りとなります。
+        <div
+          v-for = "data in displayDatas"
+          :class="{'text-danger': data.isHigh[randArray[resultNumber]] === 1, 'text-primary':data.isHigh[randArray[resultNumber]] === 0}">
+          {{data.name}}：{{data.fee[randArray[resultNumber]]}}
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table border="1" align="center">
           <tr>
             <th>抽選結果</th>
             <th
@@ -32,7 +42,11 @@
             v-for="(n,i) in randArray"
             :key="n"
           >
-            <td>{{ i + 1 }}</td>
+            <td
+              :class="{'bg-danger': resultNumber === i}"
+            >
+              {{ i + 1 }}
+            </td>
             <td
               v-for="data in displayDatas"
               :class="{'text-danger': data.isHigh[n]=== 1, 'text-primary': data.isHigh[n]=== 0}"
@@ -41,6 +55,7 @@
             </td>
           </tr>
         </table>
+      </div>
     </div>
   </div>
 </template>
@@ -54,7 +69,8 @@ export default {
       totalFee: 0,
       displayDatas: '',
       numberOfSacrifice: 0, //高いほうを払う羽目になる人の数。
-      randArray: [],
+      randArray: [], //0～999
+      resultNumber: 0, //0～999
     };
   },
   computed: {
@@ -82,6 +98,11 @@ export default {
       if(this.errorText){
         return [];
       }
+      let totalFee = 0;
+      datas.forEach((obj)=>{
+        totalFee += obj.fee;
+      });
+      this.totalFee = totalFee;
       return datas;
     },
     duplicateUser() {
@@ -102,10 +123,7 @@ export default {
     prepared() {
       let datas = this.datas;
       let displayDatas = [];
-      let totalFee = 0;
-      datas.forEach((obj)=>{
-        totalFee += obj.fee;
-      });
+      let totalFee = this.totalFee;
       let sumOfLow = 0;
       let highRates = [];
       datas.forEach((obj, i)=>{
@@ -161,6 +179,7 @@ export default {
         [randArray[i], randArray[rand]] = [randArray[rand], randArray[i]];
       }
       this.randArray = randArray;
+      this.resultNumber = Math.floor(Math.random() * 1000 );
       console.log(displayDatas);
     }
   }
