@@ -2385,25 +2385,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       membersInText: '',
       errorText: '',
       totalFee: 0,
-      displayDatas: '',
+      datasForDisplay: '',
+      changedText: true,
       numberOfSacrifice: 0,
       //高いほうを払う羽目になる人の数。
       randArray: [],
-      //0～999
-      resultNumber: 0 //0～999
-
+      //0～999。datasが変更後+ボタン押せば変わる。
+      resultNumber: 0,
+      //0～999。毎回変わる。
+      displayResult: false,
+      displayTable: false
     };
   },
   computed: {
     datas: function datas() {
       var _this = this;
 
+      this.displayTable = false;
       this.errorText = '';
 
       if (this.membersInText === '') {
@@ -2439,6 +2461,7 @@ __webpack_require__.r(__webpack_exports__);
         totalFee += obj.fee;
       });
       this.totalFee = totalFee;
+      this.changedText = true;
       return datas;
     },
     duplicateUser: function duplicateUser() {
@@ -2460,8 +2483,9 @@ __webpack_require__.r(__webpack_exports__);
     prepared: function prepared() {
       var _this2 = this;
 
+      this.displayResult = true;
       var datas = this.datas;
-      var displayDatas = [];
+      var datasForDisplay = [];
       var totalFee = this.totalFee;
       var sumOfLow = 0;
       var highRates = [];
@@ -2484,10 +2508,10 @@ __webpack_require__.r(__webpack_exports__);
         pushObj.rate = obj.high.rate;
         pushObj.index = i;
         highRates.push(pushObj);
-        displayDatas[i] = {};
-        displayDatas[i].name = obj.name;
-        displayDatas[i].fee = [];
-        displayDatas[i].isHigh = [];
+        datasForDisplay[i] = {};
+        datasForDisplay[i].name = obj.name;
+        datasForDisplay[i].fee = [];
+        datasForDisplay[i].isHigh = [];
       });
       this.numberOfSacrifice = (totalFee - sumOfLow) / 1000; //highRates=[{'rate':600,'index':0},{},{}]、numberOfSacrifice=2
 
@@ -2499,33 +2523,38 @@ __webpack_require__.r(__webpack_exports__);
         });
         highRates.forEach(function (obj, i) {
           if (i < _this2.numberOfSacrifice) {
-            displayDatas[obj.index].fee.push(datas[obj.index].high.fee);
-            displayDatas[obj.index].isHigh.push(1);
+            datasForDisplay[obj.index].fee.push(datas[obj.index].high.fee);
+            datasForDisplay[obj.index].isHigh.push(1);
             obj.rate--;
           } else {
-            displayDatas[obj.index].fee.push(datas[obj.index].low.fee);
-            displayDatas[obj.index].isHigh.push(0);
+            datasForDisplay[obj.index].fee.push(datas[obj.index].low.fee);
+            datasForDisplay[obj.index].isHigh.push(0);
           }
         });
       }
 
-      this.displayDatas = displayDatas;
-      var randArray = [];
+      this.datasForDisplay = datasForDisplay;
 
-      for (var i = 0; i < 1000; i++) {
-        randArray.push(i);
+      if (this.changedText === true) {
+        var randArray = [];
+
+        for (var i = 0; i < 1000; i++) {
+          randArray.push(i);
+        }
+
+        for (var _i = randArray.length - 1; _i > 0; _i--) {
+          var rand = Math.floor(Math.random() * (_i + 1));
+          var _ref = [randArray[rand], randArray[_i]];
+          randArray[_i] = _ref[0];
+          randArray[rand] = _ref[1];
+        }
+
+        this.randArray = randArray;
+        this.changedText = false;
       }
 
-      for (var _i = randArray.length - 1; _i > 0; _i--) {
-        var rand = Math.floor(Math.random() * (_i + 1));
-        var _ref = [randArray[rand], randArray[_i]];
-        randArray[_i] = _ref[0];
-        randArray[rand] = _ref[1];
-      }
-
-      this.randArray = randArray;
       this.resultNumber = Math.floor(Math.random() * 1000);
-      console.log(displayDatas);
+      console.log(datasForDisplay);
     }
   }
 });
@@ -21242,103 +21271,151 @@ var render = function() {
       _c(
         "button",
         {
-          staticClass: "btn btn-primary",
+          staticClass: "btn btn-primary mb-2",
           attrs: { type: "button" },
           on: { click: _vm.prepared }
         },
         [_vm._v("\n      結果を表示\n    ")]
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        [
-          _vm._v(
-            "\n      1から1000の数字をランダムに抽選し、" +
-              _vm._s(_vm.resultNumber + 1) +
-              "が出ました。\n      下の表と照らし合わせた結果、それぞれの支払額は以下の通りとなります。\n      "
-          ),
-          _vm._l(_vm.displayDatas, function(data) {
-            return _c(
-              "div",
-              {
-                class: {
-                  "text-danger":
-                    data.isHigh[_vm.randArray[_vm.resultNumber]] === 1,
-                  "text-primary":
-                    data.isHigh[_vm.randArray[_vm.resultNumber]] === 0
-                }
-              },
-              [
-                _vm._v(
-                  "\n        " +
-                    _vm._s(data.name) +
-                    "：" +
-                    _vm._s(data.fee[_vm.randArray[_vm.resultNumber]]) +
-                    "\n      "
-                )
-              ]
-            )
-          })
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c("div", { staticStyle: { "overflow-x": "auto" } }, [
-        _c(
-          "table",
-          { attrs: { border: "1", align: "center" } },
-          [
-            _c(
-              "tr",
-              [
-                _c("th", [_vm._v("抽選結果")]),
+      _vm.displayResult === true
+        ? _c(
+            "div",
+            { staticClass: "mb-2" },
+            [
+              _c("div", { staticClass: "mb-2" }, [
+                _vm._v("\n        1～1000の数字をランダムに抽選し、"),
+                _c("br"),
                 _vm._v(" "),
-                _vm._l(_vm.displayDatas, function(data) {
-                  return _c("th", [
+                _c("span", { staticStyle: { "font-size": "30px" } }, [
+                  _vm._v(_vm._s(_vm.resultNumber + 1)),
+                  _c("br")
+                ]),
+                _vm._v("\n        が出ました。"),
+                _c("br"),
+                _vm._v(
+                  "\n        対応表と照らし合わせた結果、それぞれの支払額は以下の通りとなります。\n      "
+                )
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.datasForDisplay, function(data) {
+                return _c(
+                  "div",
+                  {
+                    class: {
+                      "text-danger":
+                        data.isHigh[_vm.randArray[_vm.resultNumber]] === 1,
+                      "text-primary":
+                        data.isHigh[_vm.randArray[_vm.resultNumber]] === 0
+                    },
+                    staticStyle: { "font-size": "20px" }
+                  },
+                  [
                     _vm._v(
-                      "\n            " + _vm._s(data.name) + "\n          "
+                      "\n        " +
+                        _vm._s(data.name) +
+                        "：" +
+                        _vm._s(data.fee[_vm.randArray[_vm.resultNumber]]) +
+                        "\n      "
                     )
+                  ]
+                )
+              }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary mb-2",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      _vm.displayTable = !_vm.displayTable
+                    }
+                  }
+                },
+                [_vm._v("\n        対応表を表示\n      ")]
+              ),
+              _vm._v(" "),
+              _vm.displayTable === true
+                ? _c("div", { staticClass: "mb-2" }, [
+                    _vm.displayTable === true
+                      ? _c("div", { staticStyle: { "overflow-x": "auto" } }, [
+                          _c(
+                            "table",
+                            { attrs: { border: "1", align: "center" } },
+                            [
+                              _c(
+                                "tr",
+                                [
+                                  _c("th", [_vm._v("抽選結果")]),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.datasForDisplay, function(data) {
+                                    return _c("th", [
+                                      _vm._v(
+                                        "\n                " +
+                                          _vm._s(data.name) +
+                                          "\n              "
+                                      )
+                                    ])
+                                  })
+                                ],
+                                2
+                              ),
+                              _vm._v(" "),
+                              _vm._l(_vm.randArray, function(n, i) {
+                                return _c(
+                                  "tr",
+                                  { key: n },
+                                  [
+                                    _c(
+                                      "td",
+                                      {
+                                        class: {
+                                          "bg-danger": _vm.resultNumber === i
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                " +
+                                            _vm._s(i + 1) +
+                                            "\n              "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.datasForDisplay, function(data) {
+                                      return _c(
+                                        "td",
+                                        {
+                                          class: {
+                                            "text-danger": data.isHigh[n] === 1,
+                                            "text-primary": data.isHigh[n] === 0
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                " +
+                                              _vm._s(data.fee[n]) +
+                                              "\n              "
+                                          )
+                                        ]
+                                      )
+                                    })
+                                  ],
+                                  2
+                                )
+                              })
+                            ],
+                            2
+                          )
+                        ])
+                      : _vm._e()
                   ])
-                })
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _vm._l(_vm.randArray, function(n, i) {
-              return _c(
-                "tr",
-                { key: n },
-                [
-                  _c("td", { class: { "bg-danger": _vm.resultNumber === i } }, [
-                    _vm._v("\n            " + _vm._s(i + 1) + "\n          ")
-                  ]),
-                  _vm._v(" "),
-                  _vm._l(_vm.displayDatas, function(data) {
-                    return _c(
-                      "td",
-                      {
-                        class: {
-                          "text-danger": data.isHigh[n] === 1,
-                          "text-primary": data.isHigh[n] === 0
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n            " +
-                            _vm._s(data.fee[n]) +
-                            "\n          "
-                        )
-                      ]
-                    )
-                  })
-                ],
-                2
-              )
-            })
-          ],
-          2
-        )
-      ])
+                : _vm._e()
+            ],
+            2
+          )
+        : _vm._e()
     ])
   ])
 }

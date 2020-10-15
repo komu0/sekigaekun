@@ -16,45 +16,63 @@
       </div>
     </div>
     <div class="mb-4">
-      <button type="button" class="btn btn-primary" @click="prepared">
+      <button type="button" class="btn btn-primary mb-2" @click="prepared">
         結果を表示
       </button>
-      <div>
-        1から1000の数字をランダムに抽選し、{{resultNumber + 1}}が出ました。
-        下の表と照らし合わせた結果、それぞれの支払額は以下の通りとなります。
-        <div
-          v-for = "data in displayDatas"
+      <div
+        v-if="displayResult === true"
+        class="mb-2"
+      >
+        <div class="mb-2">
+          1～1000の数字をランダムに抽選し、<br>
+          <span style="font-size: 30px">{{resultNumber + 1}}<br></span>
+          が出ました。<br>
+          対応表と照らし合わせた結果、それぞれの支払額は以下の通りとなります。
+        </div>
+        <div style="font-size: 20px"
+          v-for = "data in datasForDisplay"
           :class="{'text-danger': data.isHigh[randArray[resultNumber]] === 1, 'text-primary':data.isHigh[randArray[resultNumber]] === 0}">
           {{data.name}}：{{data.fee[randArray[resultNumber]]}}
         </div>
-      </div>
-      <div style="overflow-x:auto;">
-        <table border="1" align="center">
-          <tr>
-            <th>抽選結果</th>
-            <th
-              v-for="data in displayDatas"
-            >
-              {{data.name}}
-            </th>
-          </tr>
-          <tr
-            v-for="(n,i) in randArray"
-            :key="n"
+        <button type="button" class="btn btn-primary mb-2" @click="displayTable = !displayTable">
+          対応表を表示
+        </button>
+        <div
+          v-if="displayTable === true"
+          class="mb-2"
+        >
+          <div
+            style="overflow-x:auto;"
+            v-if="displayTable === true"
           >
-            <td
-              :class="{'bg-danger': resultNumber === i}"
-            >
-              {{ i + 1 }}
-            </td>
-            <td
-              v-for="data in displayDatas"
-              :class="{'text-danger': data.isHigh[n]=== 1, 'text-primary': data.isHigh[n]=== 0}"
-            >
-              {{data.fee[n]}}
-            </td>
-          </tr>
-        </table>
+            <table border="1" align="center">
+              <tr>
+                <th>抽選結果</th>
+                <th
+                  v-for="data in datasForDisplay"
+                >
+                  {{data.name}}
+                </th>
+              </tr>
+              <tr
+                v-for="(n,i) in randArray"
+                :key="n"
+              >
+                <td
+                  :class="{'bg-danger': resultNumber === i}"
+                >
+                  {{ i + 1 }}
+                </td>
+                <td
+                  v-for="data in datasForDisplay"
+                  :class="{'text-danger': data.isHigh[n]=== 1, 'text-primary': data.isHigh[n]=== 0}"
+                >
+                  {{data.fee[n]}}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -67,14 +85,18 @@ export default {
       membersInText: '',
       errorText: '',
       totalFee: 0,
-      displayDatas: '',
+      datasForDisplay: '',
+      changedText: true,
       numberOfSacrifice: 0, //高いほうを払う羽目になる人の数。
-      randArray: [], //0～999
-      resultNumber: 0, //0～999
+      randArray: [], //0～999。datasが変更後+ボタン押せば変わる。
+      resultNumber: 0, //0～999。毎回変わる。
+      displayResult: false,
+      displayTable: false,
     };
   },
   computed: {
     datas() {
+      this.displayTable = false;
       this.errorText = '';
       if (this.membersInText === ''){
         return [];
@@ -103,6 +125,7 @@ export default {
         totalFee += obj.fee;
       });
       this.totalFee = totalFee;
+      this.changedText = true;
       return datas;
     },
     duplicateUser() {
@@ -121,8 +144,9 @@ export default {
   },
   methods: {
     prepared() {
+      this.displayResult = true;
       let datas = this.datas;
-      let displayDatas = [];
+      let datasForDisplay = [];
       let totalFee = this.totalFee;
       let sumOfLow = 0;
       let highRates = [];
@@ -143,10 +167,10 @@ export default {
         pushObj.rate = obj.high.rate;
         pushObj.index = i;
         highRates.push(pushObj);
-        displayDatas[i] = {};
-        displayDatas[i].name = obj.name;
-        displayDatas[i].fee = [];
-        displayDatas[i].isHigh = [];
+        datasForDisplay[i] = {};
+        datasForDisplay[i].name = obj.name;
+        datasForDisplay[i].fee = [];
+        datasForDisplay[i].isHigh = [];
       });
       this.numberOfSacrifice = ( totalFee - sumOfLow ) / 1000;
       
@@ -159,28 +183,31 @@ export default {
         });
         highRates.forEach((obj,i)=>{
           if(i < this.numberOfSacrifice){
-            displayDatas[obj.index].fee.push(datas[obj.index].high.fee);
-            displayDatas[obj.index].isHigh.push(1);
+            datasForDisplay[obj.index].fee.push(datas[obj.index].high.fee);
+            datasForDisplay[obj.index].isHigh.push(1);
             obj.rate--;
           } else {
-            displayDatas[obj.index].fee.push(datas[obj.index].low.fee);
-            displayDatas[obj.index].isHigh.push(0);
+            datasForDisplay[obj.index].fee.push(datas[obj.index].low.fee);
+            datasForDisplay[obj.index].isHigh.push(0);
           }
         });
       }
-      this.displayDatas = displayDatas;
+      this.datasForDisplay = datasForDisplay;
       
-      let randArray = [];
-      for(let i = 0; i < 1000; i++){
-        randArray.push(i);
+      if (this.changedText === true) {
+        let randArray = [];
+        for(let i = 0; i < 1000; i++){
+          randArray.push(i);
+        }
+        for(let i = randArray.length - 1; i > 0; i--){
+          let rand = Math.floor(Math.random() * (i + 1));
+          [randArray[i], randArray[rand]] = [randArray[rand], randArray[i]];
+        }
+        this.randArray = randArray;
+        this.changedText = false;
       }
-      for(let i = randArray.length - 1; i > 0; i--){
-        let rand = Math.floor(Math.random() * (i + 1));
-        [randArray[i], randArray[rand]] = [randArray[rand], randArray[i]];
-      }
-      this.randArray = randArray;
       this.resultNumber = Math.floor(Math.random() * 1000 );
-      console.log(displayDatas);
+      console.log(datasForDisplay);
     }
   }
 };
