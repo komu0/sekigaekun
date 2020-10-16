@@ -2403,6 +2403,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2434,6 +2457,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var rows = this.membersInText.split(/\n+/);
       var datas = [];
+      var totalFee = 0;
       rows.some(function (row, i) {
         var rowData = {};
 
@@ -2449,6 +2473,7 @@ __webpack_require__.r(__webpack_exports__);
 
         rowData.name = row.split('、')[0];
         rowData.fee = parseFloat(row.split('、')[1]);
+        totalFee += rowData.fee;
         datas.push(rowData);
       });
 
@@ -2456,12 +2481,24 @@ __webpack_require__.r(__webpack_exports__);
         return [];
       }
 
-      var totalFee = 0;
-      datas.forEach(function (obj) {
-        totalFee += obj.fee;
+      datas.forEach(function (obj, i) {
+        obj.low = {};
+        obj.high = {};
+        obj.sacrifice = [];
+
+        if (i === 0) {
+          obj.low.fee = Math.floor((obj.fee + 1000 - totalFee % 1000) / 1000) * 1000 + totalFee % 1000 - 1000;
+        } else {
+          obj.low.fee = Math.floor(obj.fee / 1000) * 1000;
+        }
+
+        obj.high.fee = obj.low.fee + 1000;
+        obj.low.rate = obj.high.fee - obj.fee;
+        obj.high.rate = 1000 - obj.low.rate;
       });
       this.totalFee = totalFee;
       this.changedText = true;
+      console.log('datas', datas);
       return datas;
     },
     duplicateUser: function duplicateUser() {
@@ -2490,19 +2527,6 @@ __webpack_require__.r(__webpack_exports__);
       var sumOfLow = 0;
       var highRates = [];
       datas.forEach(function (obj, i) {
-        obj.low = {};
-        obj.high = {};
-        obj.sacrifice = [];
-
-        if (i === 0) {
-          obj.low.fee = Math.floor((obj.fee + 1000 - totalFee % 1000) / 1000) * 1000 + totalFee % 1000 - 1000;
-        } else {
-          obj.low.fee = Math.floor(obj.fee / 1000) * 1000;
-        }
-
-        obj.high.fee = obj.low.fee + 1000;
-        obj.low.rate = obj.high.fee - obj.fee;
-        obj.high.rate = 1000 - obj.low.rate;
         sumOfLow += obj.low.fee;
         var pushObj = {};
         pushObj.rate = obj.high.rate;
@@ -2554,7 +2578,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.resultNumber = Math.floor(Math.random() * 1000);
-      console.log(datasForDisplay);
     }
   }
 });
@@ -21225,45 +21248,59 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", [
-        _c(
-          "span",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.duplicateUser,
-                expression: "duplicateUser"
-              }
-            ]
-          },
-          [
-            _c("i", { staticClass: "fa fa-exclamation-triangle" }),
-            _vm._v(
-              "名前「" +
-                _vm._s(_vm.duplicateUser) +
-                "」が重複しています。\n      "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "span",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.errorText,
-                expression: "errorText"
-              }
-            ]
-          },
-          [
-            _c("i", { staticClass: "fa fa-exclamation-triangle" }),
-            _vm._v(_vm._s(_vm.errorText) + "\n      ")
-          ]
-        )
+        _vm.duplicateUser
+          ? _c("span", [
+              _c("i", { staticClass: "fa fa-exclamation-triangle" }),
+              _vm._v(
+                "名前「" +
+                  _vm._s(_vm.duplicateUser) +
+                  "」が重複しています。\n      "
+              )
+            ])
+          : _vm.errorText
+          ? _c("span", [
+              _c("i", { staticClass: "fa fa-exclamation-triangle" }),
+              _vm._v(_vm._s(_vm.errorText) + "\n      ")
+            ])
+          : _c("div", [
+              _vm._v("\n        抽選内訳\n        "),
+              _c("div", { staticStyle: { "overflow-x": "auto" } }, [
+                _c(
+                  "table",
+                  { attrs: { border: "1", align: "center" } },
+                  [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _vm._l(_vm.datas, function(data) {
+                      return _c("tr", { key: data.name }, [
+                        _c("td", [_vm._v(_vm._s(data.name))]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-primary" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(data.low.fee) +
+                              "円 / " +
+                              _vm._s(data.low.rate / 10) +
+                              "%\n              "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-danger" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(data.high.fee) +
+                              "円 / " +
+                              _vm._s(data.high.rate / 10) +
+                              "%\n              "
+                          )
+                        ])
+                      ])
+                    })
+                  ],
+                  2
+                )
+              ])
+            ])
       ])
     ]),
     _vm._v(" "),
@@ -21287,7 +21324,7 @@ var render = function() {
                 _vm._v("\n        1～1000の数字をランダムに抽選し、"),
                 _c("br"),
                 _vm._v(" "),
-                _c("span", { staticStyle: { "font-size": "30px" } }, [
+                _c("span", { staticStyle: { "font-size": "40px" } }, [
                   _vm._v(_vm._s(_vm.resultNumber + 1)),
                   _c("br")
                 ]),
@@ -21365,23 +21402,20 @@ var render = function() {
                               _vm._l(_vm.randArray, function(n, i) {
                                 return _c(
                                   "tr",
-                                  { key: n },
+                                  {
+                                    key: n,
+                                    class: {
+                                      "bg-warning": _vm.resultNumber === i
+                                    }
+                                  },
                                   [
-                                    _c(
-                                      "td",
-                                      {
-                                        class: {
-                                          "bg-danger": _vm.resultNumber === i
-                                        }
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\n                " +
-                                            _vm._s(i + 1) +
-                                            "\n              "
-                                        )
-                                      ]
-                                    ),
+                                    _c("td", [
+                                      _vm._v(
+                                        "\n                " +
+                                          _vm._s(i + 1) +
+                                          "\n              "
+                                      )
+                                    ]),
                                     _vm._v(" "),
                                     _vm._l(_vm.datasForDisplay, function(data) {
                                       return _c(
@@ -21430,6 +21464,18 @@ var staticRenderFns = [
       _vm._v("\n    ※「メンバー、金額」の形で改行区切り"),
       _c("br"),
       _vm._v("\n    ※支払いを行う人を一番上に書いてください。")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [_vm._v("名前")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("幸運")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("不運")])
     ])
   }
 ]

@@ -7,12 +7,36 @@
       <textarea v-model.trim="membersInText" rows=10></textarea>
       <div class="text-right mb-2">合計金額：{{totalFee}}円/入力済：{{datas.length}}人</div>
       <div>
-        <span v-show="duplicateUser">
+        <span v-if="duplicateUser">
           <i class="fa fa-exclamation-triangle"></i>名前「{{duplicateUser}}」が重複しています。
         </span>
-        <span v-show="errorText">
+        <span v-else-if="errorText">
           <i class="fa fa-exclamation-triangle"></i>{{errorText}}
         </span>
+        <div v-else>
+          抽選内訳
+          <div style="overflow-x:auto;">
+            <table border="1" align="center">
+              <tr>
+                <th>名前</th>
+                <th>幸運</th>
+                <th>不運</th>
+              </tr>
+              <tr
+                v-for="data in datas"
+                :key="data.name"
+              >
+                <td>{{ data.name }}</td>
+                <td class="text-primary">
+                  {{data.low.fee}}円 / {{data.low.rate / 10}}%
+                </td>
+                <td class="text-danger">
+                  {{data.high.fee}}円 / {{data.high.rate / 10}}%
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mb-4">
@@ -25,7 +49,7 @@
       >
         <div class="mb-2">
           1～1000の数字をランダムに抽選し、<br>
-          <span style="font-size: 30px">{{resultNumber + 1}}<br></span>
+          <span style="font-size: 40px">{{resultNumber + 1}}<br></span>
           が出ました。<br>
           対応表と照らし合わせた結果、それぞれの支払額は以下の通りとなります。
         </div>
@@ -57,10 +81,9 @@
               <tr
                 v-for="(n,i) in randArray"
                 :key="n"
+                :class="{'bg-warning': resultNumber === i}"
               >
-                <td
-                  :class="{'bg-danger': resultNumber === i}"
-                >
+                <td>
                   {{ i + 1 }}
                 </td>
                 <td
@@ -103,6 +126,7 @@ export default {
       }
       const rows = this.membersInText.split(/\n+/);
       let datas = [];
+      let totalFee = 0;
       rows.some((row, i)=>{
         let rowData = {};
         if(row.split('、').length !== 2){
@@ -115,17 +139,28 @@ export default {
         }
         rowData.name = row.split('、')[0];
         rowData.fee = parseFloat(row.split('、')[1]);
+        totalFee += rowData.fee;
         datas.push(rowData);
       });
       if(this.errorText){
         return [];
       }
-      let totalFee = 0;
-      datas.forEach((obj)=>{
-        totalFee += obj.fee;
+      datas.forEach((obj, i)=>{
+        obj.low = {};
+        obj.high = {};
+        obj.sacrifice = [];
+        if (i === 0){
+          obj.low.fee = Math.floor(((obj.fee + 1000)-(totalFee % 1000))/1000)*1000 + totalFee % 1000 - 1000;
+        } else {
+          obj.low.fee = Math.floor(obj.fee / 1000) * 1000;
+        }
+        obj.high.fee = obj.low.fee + 1000;
+        obj.low.rate = obj.high.fee - obj.fee;
+        obj.high.rate = 1000 - obj.low.rate;
       });
       this.totalFee = totalFee;
       this.changedText = true;
+      console.log('datas',datas);
       return datas;
     },
     duplicateUser() {
@@ -151,17 +186,6 @@ export default {
       let sumOfLow = 0;
       let highRates = [];
       datas.forEach((obj, i)=>{
-        obj.low = {};
-        obj.high = {};
-        obj.sacrifice = [];
-        if (i === 0){
-          obj.low.fee = Math.floor(((obj.fee + 1000)-(totalFee % 1000))/1000)*1000 + totalFee % 1000 - 1000;
-        } else {
-          obj.low.fee = Math.floor(obj.fee / 1000) * 1000;
-        }
-        obj.high.fee = obj.low.fee + 1000;
-        obj.low.rate = obj.high.fee - obj.fee;
-        obj.high.rate = 1000 - obj.low.rate;
         sumOfLow += obj.low.fee;
         let pushObj = {};
         pushObj.rate = obj.high.rate;
@@ -207,7 +231,6 @@ export default {
         this.changedText = false;
       }
       this.resultNumber = Math.floor(Math.random() * 1000 );
-      console.log(datasForDisplay);
     }
   }
 };
