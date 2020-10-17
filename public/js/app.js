@@ -21262,7 +21262,8 @@ var render = function() {
               _c("i", { staticClass: "fa fa-exclamation-triangle" }),
               _vm._v(_vm._s(_vm.errorText) + "\n      ")
             ])
-          : _c("div", [
+          : _vm.membersInText
+          ? _c("div", [
               _vm._v("\n        抽選内訳\n        "),
               _c("div", { staticStyle: { "overflow-x": "auto" } }, [
                 _c(
@@ -21301,6 +21302,7 @@ var render = function() {
                 )
               ])
             ])
+          : _vm._e()
       ])
     ]),
     _vm._v(" "),

@@ -13,7 +13,7 @@
         <span v-else-if="errorText">
           <i class="fa fa-exclamation-triangle"></i>{{errorText}}
         </span>
-        <div v-else>
+        <div v-else-if="membersInText">
           抽選内訳
           <div style="overflow-x:auto;">
             <table border="1" align="center">
