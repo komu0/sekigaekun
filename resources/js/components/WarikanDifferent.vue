@@ -53,10 +53,12 @@
           が出ました。<br>
           対応表と照らし合わせた結果、それぞれの支払額は以下の通りとなります。
         </div>
-        <div style="font-size: 20px"
-          v-for = "data in datasForDisplay"
-          :class="{'text-danger': data.isHigh[randArray[resultNumber]] === 1, 'text-primary':data.isHigh[randArray[resultNumber]] === 0}">
-          {{data.name}}：{{data.fee[randArray[resultNumber]]}}
+        <div class="mb-2">
+          <div style="font-size: 20px"
+            v-for = "data in datasForDisplay"
+            :class="{'text-danger': data.isHigh[randArray[resultNumber]] === 1, 'text-primary':data.isHigh[randArray[resultNumber]] === 0}">
+            {{data.name}}：{{data.fee[randArray[resultNumber]]}}
+          </div>
         </div>
         <button type="button" class="btn btn-primary mb-2" @click="displayTable = !displayTable">
           対応表を表示
@@ -122,6 +124,7 @@ export default {
       this.displayTable = false;
       this.errorText = '';
       if (this.membersInText === ''){
+        this.totalFee = 0;
         return [];
       }
       const rows = this.membersInText.split(/\n+/);
