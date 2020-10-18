@@ -21379,7 +21379,7 @@ var render = function() {
                         _vm._s(data.name) +
                         "：" +
                         _vm._s(data.fee[_vm.randArray[_vm.resultNumber]]) +
-                        "\n        "
+                        "円\n        "
                     )
                   ]
                 )
@@ -21458,7 +21458,7 @@ var render = function() {
                                         _vm._v(
                                           "\n                " +
                                             _vm._s(data.fee[n]) +
-                                            "\n              "
+                                            "円\n              "
                                         )
                                       ]
                                     )
@@ -21487,7 +21487,7 @@ var staticRenderFns = [
     return _c("h2", [
       _vm._v("メンバーと金額を記入してください。"),
       _c("br"),
-      _vm._v("\n    ※「メンバー、金額」の形で改行区切り"),
+      _vm._v("\n    ※「メンバー、金額(半角英数字)」の形で改行区切り"),
       _c("br"),
       _vm._v("\n    ※支払いを行う人を一番上に書いてください。")
     ])

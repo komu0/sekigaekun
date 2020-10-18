@@ -2,7 +2,7 @@
   <div>
     <div class="mb-4">
       <h2>メンバーと金額を記入してください。<br>
-      ※「メンバー、金額」の形で改行区切り<br>
+      ※「メンバー、金額(半角英数字)」の形で改行区切り<br>
       ※支払いを行う人を一番上に書いてください。</h2>
       <textarea v-model.trim="membersInText" rows=10></textarea>
       <div class="text-right mb-2">合計金額：{{totalFee}}円/入力済：{{datas.length}}人</div>
@@ -57,7 +57,7 @@
           <div style="font-size: 20px"
             v-for = "data in datasForDisplay"
             :class="{'text-danger': data.isHigh[randArray[resultNumber]] === 1, 'text-primary':data.isHigh[randArray[resultNumber]] === 0}">
-            {{data.name}}：{{data.fee[randArray[resultNumber]]}}
+            {{data.name}}：{{data.fee[randArray[resultNumber]]}}円
           </div>
         </div>
         <button type="button" class="btn btn-primary mb-2" @click="displayTable = !displayTable">
@@ -92,7 +92,7 @@
                   v-for="data in datasForDisplay"
                   :class="{'text-danger': data.isHigh[n]=== 1, 'text-primary': data.isHigh[n]=== 0}"
                 >
-                  {{data.fee[n]}}
+                  {{data.fee[n]}}円
                 </td>
               </tr>
             </table>
