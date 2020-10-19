@@ -1,6 +1,9 @@
 <template>
   <div>
     <div class="mb-4">
+      飲み会やボードゲームカフェなどで気軽に席替えを行いたいときにご利用ください。<br>
+    </div>
+    <div class="mb-4">
       <h2>メンバーを記入してください。<br>※改行区切り</h2>
       <textarea v-model.trim="membersInText" rows=10></textarea>
       <div class="text-right mb-2">入力済：{{members.length}}人</div>
