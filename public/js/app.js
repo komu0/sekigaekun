@@ -1955,6 +1955,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 var bgColors = ['#dcdcdc', '#c0c0c0'];
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2029,6 +2032,9 @@ var bgColors = ['#dcdcdc', '#c0c0c0'];
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -2520,6 +2526,13 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return '';
+    },
+    textOnButton: function textOnButton() {
+      if (this.displayTable) {
+        return '対応表を非表示';
+      } else {
+        return '対応表を表示';
+      }
     }
   },
   components: {},
@@ -20589,8 +20602,10 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
     _c("div", { staticClass: "mb-4" }, [
-      _vm._m(0),
+      _vm._m(1),
       _vm._v(" "),
       _c("textarea", {
         directives: [
@@ -20694,7 +20709,7 @@ var render = function() {
                   0
                 ),
                 _vm._v(" "),
-                _vm._m(1),
+                _vm._m(2),
                 _vm._v(" "),
                 _c(
                   "div",
@@ -20726,6 +20741,17 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mb-4" }, [
+      _vm._v(
+        "\n    飲み会やボードゲームカフェなどで気軽に席替えを行いたいときにご利用ください。"
+      ),
+      _c("br")
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -20772,6 +20798,12 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c("div", { staticClass: "mb-4" }, [
+      _vm._v(
+        "\n    ネット越しなどで気軽にチーム分けをしたいときにご利用ください。\n  "
+      )
+    ]),
+    _vm._v(" "),
     _c("div", { staticClass: "mb-4" }, [
       _vm._m(0),
       _vm._v(" "),
@@ -21202,7 +21234,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "mb-4" }, [
       _vm._v(
-        "\n    割り勘を行うとき、小銭のやり取りが面倒くさいときにご利用ください。"
+        "\n    割り勘を行う際、小銭のやり取りが面倒くさいときにご利用ください。"
       ),
       _c("br"),
       _vm._v(
@@ -21288,7 +21320,7 @@ var render = function() {
             ])
           : _vm.membersInText
           ? _c("div", [
-              _vm._v("\n        抽選内訳\n        "),
+              _vm._v("\n        以下の金額/比率で抽選されます。\n        "),
               _c("div", { staticStyle: { "overflow-x": "auto" } }, [
                 _c(
                   "table",
@@ -21398,7 +21430,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("\n        対応表を表示\n      ")]
+              [_vm._v("\n        " + _vm._s(_vm.textOnButton) + "\n      ")]
             ),
             _vm._v(" "),
             _vm.displayTable === true

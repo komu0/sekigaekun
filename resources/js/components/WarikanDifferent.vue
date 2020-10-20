@@ -14,7 +14,7 @@
           <i class="fa fa-exclamation-triangle"></i>{{errorText}}
         </span>
         <div v-else-if="membersInText">
-          抽選内訳
+          以下の金額/比率で抽選されます。
           <div style="overflow-x:auto;">
             <table border="1" align="center">
               <tr>
@@ -61,7 +61,7 @@
           </div>
         </div>
         <button type="button" class="btn btn-primary mb-2" @click="displayTable = !displayTable">
-          対応表を表示
+          {{textOnButton}}
         </button>
         <div
           v-if="displayTable === true"
@@ -177,6 +177,13 @@ export default {
       }
       return '';
     },
+    textOnButton() {
+      if(this.displayTable){
+        return '対応表を非表示';
+      } else {
+        return '対応表を表示';
+      }
+    }
   },
   components: {
   },
