@@ -42,7 +42,31 @@
       </div>
     </div>
     <div class="mb-4">
-      {{fees}}
+      {{datas}}
+    </div>
+    <div>
+      以下の金額/比率で抽選されます。
+      <div style="overflow-x:auto;">
+        <table border="1" align="center">
+          <tr>
+            <th>名前</th>
+            <th>幸運</th>
+            <th>不運</th>
+          </tr>
+          <tr
+            v-for="data in datas"
+            :key="data.name"
+          >
+            <td>{{ data.name }}</td>
+            <td class="text-primary">
+              {{data.low.fee}}円 / {{data.low.rate / 10}}%
+            </td>
+            <td class="text-danger">
+              {{data.high.fee}}円 / {{data.high.rate / 10}}%
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -63,6 +87,9 @@ export default {
       }
       return this.membersInText.split(/\n+/);
     },
+    membersLength() {
+      return this.members.length;
+    },
     duplicateUser() {
       for(let i = 0; i < this.members.length; i++){
         const user = this.members[i];
@@ -74,29 +101,36 @@ export default {
       }
       return '';
     },
-    fees() {
-      let result = {
-        manager:
-          {
-            low: {},
-            high: {},
-          },
-        other: 
-          {
-            low: {},
-            high: {},
-          },
-      };
-      result.manager.low.fee = Math.floor(((this.personFee + 1000)-(this.totalFee % 1000))/1000)*1000 + this.totalFee % 1000 - 1000;
-      result.manager.high.fee = result.manager.low.fee + 1000;
-      result.other.low.fee = Math.floor(this.personFee / 1000) * 1000;
-      result.other.high.fee = result.other.low.fee + 1000;
-      result.manager.low.rate = (result.manager.high.fee - this.personFee) / 1000;
-      result.manager.high.rate = 1 - result.manager.low.rate;
-      result.other.low.rate = (result.other.high.fee - this.personFee) / 1000;
-      result.other.high.rate = 1 - result.other.low.rate;
-      return result;
-    }
+    
+    datas() {
+      this.displayTable = false;
+      this.errorText = '';
+      const members = this.members;
+      const totalFee = this.totalFee;
+      let datas = [];
+      members.some((member, i)=>{
+        let rowData = {};
+        rowData.name = member;
+        rowData.fee = this.personFee;
+        datas.push(rowData);
+      });
+      datas.forEach((obj, i)=>{
+        obj.low = {};
+        obj.high = {};
+        obj.sacrifice = [];
+        if (i === 0){
+          obj.low.fee = Math.floor(((obj.fee + 1000)-(totalFee % 1000))/1000)*1000 + totalFee % 1000 - 1000;
+        } else {
+          obj.low.fee = Math.floor(obj.fee / 1000) * 1000;
+        }
+        obj.high.fee = obj.low.fee + 1000;
+        obj.low.rate = obj.high.fee - obj.fee;
+        obj.high.rate = 1000 - obj.low.rate;
+      });
+      this.changedText = true;
+      console.log(datas);
+      return datas;
+    },
   },
   components: {
   },
@@ -107,7 +141,7 @@ export default {
     },
     inputTotalFee(event) {
       this.totalFee = parseFloat(event.target.value);
-      this.personFee = Math.round(this.totalFee * 100 / this.members.length) / 100;
+      this.personFee = Math.round(this.totalFee / this.members.length);
     },
     checkFee() {
       if (isNaN(this.personFee)){
@@ -116,6 +150,12 @@ export default {
       if (isNaN(this.totalFee)){
         this.totalFee = 0;
       }
+    }
+  },
+  watch: {
+    membersLength() {
+      this.totalFee = 0;
+      this.personFee = 0;
     }
   }
 };

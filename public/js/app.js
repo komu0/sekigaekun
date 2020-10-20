@@ -2662,6 +2662,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2678,6 +2702,9 @@ __webpack_require__.r(__webpack_exports__);
 
       return this.membersInText.split(/\n+/);
     },
+    membersLength: function membersLength() {
+      return this.members.length;
+    },
     duplicateUser: function duplicateUser() {
       for (var i = 0; i < this.members.length; i++) {
         var user = this.members[i];
@@ -2691,26 +2718,38 @@ __webpack_require__.r(__webpack_exports__);
 
       return '';
     },
-    fees: function fees() {
-      var result = {
-        manager: {
-          low: {},
-          high: {}
-        },
-        other: {
-          low: {},
-          high: {}
+    datas: function datas() {
+      var _this = this;
+
+      this.displayTable = false;
+      this.errorText = '';
+      var members = this.members;
+      var totalFee = this.totalFee;
+      var datas = [];
+      members.some(function (member, i) {
+        var rowData = {};
+        rowData.name = member;
+        rowData.fee = _this.personFee;
+        datas.push(rowData);
+      });
+      datas.forEach(function (obj, i) {
+        obj.low = {};
+        obj.high = {};
+        obj.sacrifice = [];
+
+        if (i === 0) {
+          obj.low.fee = Math.floor((obj.fee + 1000 - totalFee % 1000) / 1000) * 1000 + totalFee % 1000 - 1000;
+        } else {
+          obj.low.fee = Math.floor(obj.fee / 1000) * 1000;
         }
-      };
-      result.manager.low.fee = Math.floor((this.personFee + 1000 - this.totalFee % 1000) / 1000) * 1000 + this.totalFee % 1000 - 1000;
-      result.manager.high.fee = result.manager.low.fee + 1000;
-      result.other.low.fee = Math.floor(this.personFee / 1000) * 1000;
-      result.other.high.fee = result.other.low.fee + 1000;
-      result.manager.low.rate = (result.manager.high.fee - this.personFee) / 1000;
-      result.manager.high.rate = 1 - result.manager.low.rate;
-      result.other.low.rate = (result.other.high.fee - this.personFee) / 1000;
-      result.other.high.rate = 1 - result.other.low.rate;
-      return result;
+
+        obj.high.fee = obj.low.fee + 1000;
+        obj.low.rate = obj.high.fee - obj.fee;
+        obj.high.rate = 1000 - obj.low.rate;
+      });
+      this.changedText = true;
+      console.log(datas);
+      return datas;
     }
   },
   components: {},
@@ -2721,7 +2760,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     inputTotalFee: function inputTotalFee(event) {
       this.totalFee = parseFloat(event.target.value);
-      this.personFee = Math.round(this.totalFee * 100 / this.members.length) / 100;
+      this.personFee = Math.round(this.totalFee / this.members.length);
     },
     checkFee: function checkFee() {
       if (isNaN(this.personFee)) {
@@ -2731,6 +2770,12 @@ __webpack_require__.r(__webpack_exports__);
       if (isNaN(this.totalFee)) {
         this.totalFee = 0;
       }
+    }
+  },
+  watch: {
+    membersLength: function membersLength() {
+      this.totalFee = 0;
+      this.personFee = 0;
     }
   }
 });
@@ -21649,7 +21694,47 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "mb-4" }, [
-      _vm._v("\n    " + _vm._s(_vm.fees) + "\n  ")
+      _vm._v("\n    " + _vm._s(_vm.datas) + "\n  ")
+    ]),
+    _vm._v(" "),
+    _c("div", [
+      _vm._v("\n    以下の金額/比率で抽選されます。\n    "),
+      _c("div", { staticStyle: { "overflow-x": "auto" } }, [
+        _c(
+          "table",
+          { attrs: { border: "1", align: "center" } },
+          [
+            _vm._m(1),
+            _vm._v(" "),
+            _vm._l(_vm.datas, function(data) {
+              return _c("tr", { key: data.name }, [
+                _c("td", [_vm._v(_vm._s(data.name))]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-primary" }, [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(data.low.fee) +
+                      "円 / " +
+                      _vm._s(data.low.rate / 10) +
+                      "%\n          "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-danger" }, [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(data.high.fee) +
+                      "円 / " +
+                      _vm._s(data.high.rate / 10) +
+                      "%\n          "
+                  )
+                ])
+              ])
+            })
+          ],
+          2
+        )
+      ])
     ])
   ])
 }
@@ -21664,6 +21749,18 @@ var staticRenderFns = [
       _vm._v("\n    ※改行区切り"),
       _c("br"),
       _vm._v("\n    ※支払いを行う人を一番上に書いてください。")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [_vm._v("名前")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("幸運")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("不運")])
     ])
   }
 ]
