@@ -170,10 +170,8 @@ export default {
       }
       return '';
     },
-    
     datas() {
       this.displayTable = false;
-      this.errorText = '';
       const members = this.members;
       const totalFee = this.totalFee;
       let datas = [];

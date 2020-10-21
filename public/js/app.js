@@ -2797,7 +2797,6 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.displayTable = false;
-      this.errorText = '';
       var members = this.members;
       var totalFee = this.totalFee;
       var datas = [];
@@ -2937,6 +2936,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Sekigae_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Sekigae.vue */ "./resources/js/components/Sekigae.vue");
 /* harmony import */ var _components_Teamwake_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Teamwake.vue */ "./resources/js/components/Teamwake.vue");
 /* harmony import */ var _components_Warikan_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Warikan.vue */ "./resources/js/components/Warikan.vue");
+//
 //
 //
 //
@@ -22207,7 +22207,9 @@ var staticRenderFns = [
     return _c("h1", { staticClass: "mb-4", attrs: { id: "title" } }, [
       _c("span", { staticClass: "d-block" }, [_vm._v("席替えくん / ")]),
       _vm._v(" "),
-      _c("span", { staticClass: "d-block" }, [_vm._v("チーム分けくん")])
+      _c("span", { staticClass: "d-block" }, [_vm._v("チーム分けくん")]),
+      _vm._v(" "),
+      _c("span", { staticClass: "d-block" }, [_vm._v("割り勘くん")])
     ])
   }
 ]

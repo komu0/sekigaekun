@@ -3,6 +3,7 @@
     <h1 id="title" class="mb-4">
       <span class="d-block">席替えくん / </span>
       <span class="d-block">チーム分けくん</span>
+      <span class="d-block">割り勘くん</span>
     </h1>
     <div class="mb-4">
       <h2>
