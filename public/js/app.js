@@ -2438,6 +2438,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2612,6 +2616,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
 //
 //
 //
@@ -21547,7 +21555,11 @@ var render = function() {
         "button",
         {
           staticClass: "btn btn-primary mb-2",
-          attrs: { type: "button" },
+          attrs: {
+            type: "button",
+            disabled:
+              !_vm.membersInText || !!_vm.duplicateUser || !!_vm.errorText
+          },
           on: { click: _vm.prepared }
         },
         [_vm._v("\n      結果を表示\n    ")]
@@ -21828,52 +21840,61 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "mb-4" }, [
-      _vm._v(">\n    以下の金額/比率で抽選されます。\n    "),
-      _c("div", { staticStyle: { "overflow-x": "auto" } }, [
-        _c(
-          "table",
-          { attrs: { border: "1", align: "center" } },
-          [
-            _vm._m(1),
-            _vm._v(" "),
-            _vm._l(_vm.datas, function(data) {
-              return _c("tr", { key: data.name }, [
-                _c("td", [_vm._v(_vm._s(data.name))]),
+    _vm.membersInText && _vm.personFee && _vm.totalFee
+      ? _c("div", { staticClass: "mb-4" }, [
+          _vm._v("\n    以下の金額/比率で抽選されます。\n    "),
+          _c("div", { staticStyle: { "overflow-x": "auto" } }, [
+            _c(
+              "table",
+              { attrs: { border: "1", align: "center" } },
+              [
+                _vm._m(1),
                 _vm._v(" "),
-                _c("td", { staticClass: "text-primary" }, [
-                  _vm._v(
-                    "\n            " +
-                      _vm._s(data.low.fee) +
-                      "円 / " +
-                      _vm._s(data.low.rate / 10) +
-                      "%\n          "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-danger" }, [
-                  _vm._v(
-                    "\n            " +
-                      _vm._s(data.high.fee) +
-                      "円 / " +
-                      _vm._s(data.high.rate / 10) +
-                      "%\n          "
-                  )
-                ])
-              ])
-            })
-          ],
-          2
-        )
-      ])
-    ]),
+                _vm._l(_vm.datas, function(data) {
+                  return _c("tr", { key: data.name }, [
+                    _c("td", [_vm._v(_vm._s(data.name))]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-primary" }, [
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(data.low.fee) +
+                          "円 / " +
+                          _vm._s(data.low.rate / 10) +
+                          "%\n          "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-danger" }, [
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(data.high.fee) +
+                          "円 / " +
+                          _vm._s(data.high.rate / 10) +
+                          "%\n          "
+                      )
+                    ])
+                  ])
+                })
+              ],
+              2
+            )
+          ])
+        ])
+      : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "mb-4" }, [
       _c(
         "button",
         {
           staticClass: "btn btn-primary mb-2",
-          attrs: { type: "button" },
+          attrs: {
+            type: "button",
+            disabled:
+              !_vm.membersInText ||
+              !!_vm.duplicateUser ||
+              !_vm.personFee ||
+              !_vm.totalFee
+          },
           on: { click: _vm.prepared }
         },
         [_vm._v("\n      結果を表示\n    ")]

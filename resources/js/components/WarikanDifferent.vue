@@ -40,7 +40,11 @@
       </div>
     </div>
     <div class="mb-4">
-      <button type="button" class="btn btn-primary mb-2" @click="prepared">
+      <button
+        type="button"
+        class="btn btn-primary mb-2"  
+        :disabled ="(!membersInText || !!duplicateUser || !!errorText)"
+        @click="prepared">
         結果を表示
       </button>
       <div
