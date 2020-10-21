@@ -163,7 +163,6 @@ export default {
       });
       this.totalFee = totalFee;
       this.changedText = true;
-      console.log('datas',datas);
       return datas;
     },
     duplicateUser() {

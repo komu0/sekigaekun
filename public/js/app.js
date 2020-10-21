@@ -2511,7 +2511,6 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.totalFee = totalFee;
       this.changedText = true;
-      console.log('datas', datas);
       return datas;
     },
     duplicateUser: function duplicateUser() {
@@ -2686,12 +2685,80 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       membersInText: '',
       personFee: 0,
-      totalFee: 0
+      totalFee: 0,
+      datasForDisplay: '',
+      changedText: true,
+      numberOfSacrifice: 0,
+      //高いほうを払う羽目になる人の数。
+      randArray: [],
+      //0～999。datasが変更後+ボタン押せば変わる。
+      resultNumber: 0,
+      //0～999。毎回変わる。
+      displayResult: false,
+      displayTable: false
     };
   },
   computed: {
@@ -2748,8 +2815,14 @@ __webpack_require__.r(__webpack_exports__);
         obj.high.rate = 1000 - obj.low.rate;
       });
       this.changedText = true;
-      console.log(datas);
       return datas;
+    },
+    textOnButton: function textOnButton() {
+      if (this.displayTable) {
+        return '対応表を非表示';
+      } else {
+        return '対応表を表示';
+      }
     }
   },
   components: {},
@@ -2770,6 +2843,68 @@ __webpack_require__.r(__webpack_exports__);
       if (isNaN(this.totalFee)) {
         this.totalFee = 0;
       }
+    },
+    prepared: function prepared() {
+      var _this2 = this;
+
+      this.displayResult = true;
+      var datas = this.datas;
+      var datasForDisplay = [];
+      var totalFee = this.totalFee;
+      var sumOfLow = 0;
+      var highRates = [];
+      datas.forEach(function (obj, i) {
+        sumOfLow += obj.low.fee;
+        var pushObj = {};
+        pushObj.rate = obj.high.rate;
+        pushObj.index = i;
+        highRates.push(pushObj);
+        datasForDisplay[i] = {};
+        datasForDisplay[i].name = obj.name;
+        datasForDisplay[i].fee = [];
+        datasForDisplay[i].isHigh = [];
+      });
+      this.numberOfSacrifice = (totalFee - sumOfLow) / 1000; //highRates=[{'rate':600,'index':0},{},{}]、numberOfSacrifice=2
+
+      for (var time = 0; time < 1000; time++) {
+        highRates.sort(function (a, b) {
+          if (a.rate > b.rate) return -1;
+          if (a.rate < b.rate) return 1;
+          return 0;
+        });
+        highRates.forEach(function (obj, i) {
+          if (i < _this2.numberOfSacrifice) {
+            datasForDisplay[obj.index].fee.push(datas[obj.index].high.fee);
+            datasForDisplay[obj.index].isHigh.push(1);
+            obj.rate--;
+          } else {
+            datasForDisplay[obj.index].fee.push(datas[obj.index].low.fee);
+            datasForDisplay[obj.index].isHigh.push(0);
+          }
+        });
+      }
+
+      this.datasForDisplay = datasForDisplay;
+
+      if (this.changedText === true) {
+        var randArray = [];
+
+        for (var i = 0; i < 1000; i++) {
+          randArray.push(i);
+        }
+
+        for (var _i = randArray.length - 1; _i > 0; _i--) {
+          var rand = Math.floor(Math.random() * (_i + 1));
+          var _ref = [randArray[rand], randArray[_i]];
+          randArray[_i] = _ref[0];
+          randArray[rand] = _ref[1];
+        }
+
+        this.randArray = randArray;
+        this.changedText = false;
+      }
+
+      this.resultNumber = Math.floor(Math.random() * 1000);
     }
   },
   watch: {
@@ -21694,11 +21829,7 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "mb-4" }, [
-      _vm._v("\n    " + _vm._s(_vm.datas) + "\n  ")
-    ]),
-    _vm._v(" "),
-    _c("div", [
-      _vm._v("\n    以下の金額/比率で抽選されます。\n    "),
+      _vm._v(">\n    以下の金額/比率で抽選されます。\n    "),
       _c("div", { staticStyle: { "overflow-x": "auto" } }, [
         _c(
           "table",
@@ -21735,6 +21866,154 @@ var render = function() {
           2
         )
       ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "mb-4" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary mb-2",
+          attrs: { type: "button" },
+          on: { click: _vm.prepared }
+        },
+        [_vm._v("\n      結果を表示\n    ")]
+      ),
+      _vm._v(" "),
+      _vm.displayResult === true
+        ? _c("div", { staticClass: "mb-2" }, [
+            _c("div", { staticClass: "mb-2" }, [
+              _vm._v("\n        1～1000の数字をランダムに抽選し、"),
+              _c("br"),
+              _vm._v(" "),
+              _c("span", { staticStyle: { "font-size": "40px" } }, [
+                _vm._v(_vm._s(_vm.resultNumber + 1)),
+                _c("br")
+              ]),
+              _vm._v("\n        が出ました。"),
+              _c("br"),
+              _vm._v(
+                "\n        対応表と照らし合わせた結果、それぞれの支払額は以下の通りとなります。\n      "
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "mb-2" },
+              _vm._l(_vm.datasForDisplay, function(data) {
+                return _c(
+                  "div",
+                  {
+                    class: {
+                      "text-danger":
+                        data.isHigh[_vm.randArray[_vm.resultNumber]] === 1,
+                      "text-primary":
+                        data.isHigh[_vm.randArray[_vm.resultNumber]] === 0
+                    },
+                    staticStyle: { "font-size": "20px" }
+                  },
+                  [
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(data.name) +
+                        "：" +
+                        _vm._s(data.fee[_vm.randArray[_vm.resultNumber]]) +
+                        "円\n        "
+                    )
+                  ]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary mb-2",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    _vm.displayTable = !_vm.displayTable
+                  }
+                }
+              },
+              [_vm._v("\n        " + _vm._s(_vm.textOnButton) + "\n      ")]
+            ),
+            _vm._v(" "),
+            _vm.displayTable === true
+              ? _c("div", { staticClass: "mb-2" }, [
+                  _vm.displayTable === true
+                    ? _c("div", { staticStyle: { "overflow-x": "auto" } }, [
+                        _c(
+                          "table",
+                          { attrs: { border: "1", align: "center" } },
+                          [
+                            _c(
+                              "tr",
+                              [
+                                _c("th", [_vm._v("抽選結果")]),
+                                _vm._v(" "),
+                                _vm._l(_vm.datasForDisplay, function(data) {
+                                  return _c("th", [
+                                    _vm._v(
+                                      "\n                " +
+                                        _vm._s(data.name) +
+                                        "\n              "
+                                    )
+                                  ])
+                                })
+                              ],
+                              2
+                            ),
+                            _vm._v(" "),
+                            _vm._l(_vm.randArray, function(n, i) {
+                              return _c(
+                                "tr",
+                                {
+                                  key: n,
+                                  class: {
+                                    "bg-warning": _vm.resultNumber === i
+                                  }
+                                },
+                                [
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                " +
+                                        _vm._s(i + 1) +
+                                        "\n              "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.datasForDisplay, function(data) {
+                                    return _c(
+                                      "td",
+                                      {
+                                        class: {
+                                          "text-danger": data.isHigh[n] === 1,
+                                          "text-primary": data.isHigh[n] === 0
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                " +
+                                            _vm._s(data.fee[n]) +
+                                            "円\n              "
+                                        )
+                                      ]
+                                    )
+                                  })
+                                ],
+                                2
+                              )
+                            })
+                          ],
+                          2
+                        )
+                      ])
+                    : _vm._e()
+                ])
+              : _vm._e()
+          ])
+        : _vm._e()
     ])
   ])
 }
